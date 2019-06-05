@@ -18,6 +18,8 @@ describe 'dockerapp_wso2is' do
       it { is_expected.to contain_file('/srv/application-data/wso2_test') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test') }
       it { is_expected.to contain_file('/srv/application-lib/wso2_test') }
+      it { is_expected.to contain_file('/srv/application-lib/wso2_test/dropins') }
+      it { is_expected.to contain_file('/srv/application-lib/wso2_test/lib') }
       it { is_expected.to contain_file('/srv/application-log/wso2_test') }
       it { is_expected.to contain_file('/srv/scripts/wso2_test') }
     end
