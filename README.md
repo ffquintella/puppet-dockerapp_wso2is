@@ -26,13 +26,18 @@ The advantage of this strucure is standarization between your apps and security.
 
 ### Setup Requirements **OPTIONAL**
 
-This module requires the dockerapp module and stdblib.
+This module depends of the following other modules:
+
+* ffquintella-dockerapp 
+* puppetlabs-stdblib
+* puppet-archive
 
 
 ## Usage
 
 Basicaly includes dockerapp_wso2is and adjust the parameters needed
 
+All the parameters are described in [doc/REFERENCES.md](https://github.com/ffquintella/puppet-dockerapp_wso2is/blob/master/doc/REFERENCES.md)
 
 ## Limitations
 

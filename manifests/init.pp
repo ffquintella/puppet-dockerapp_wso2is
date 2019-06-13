@@ -4,10 +4,25 @@
 #
 # @example
 #   include dockerapp_wso2is
+#
+# @param [String] service_name 
+#   The name of the container
+#
+# @param [String] version 
+#   The version of the docker image do download
+#
+# @param [Array] ports 
+#   The port mapping in array format
+#
+# @param [Array] dropins 
+#   A list of download urls to get extra dopins needed they must be jar files and 
+#   use the format http(s)://url.com/dir1/dir2/filename-0.1.1.jar
+#
 class dockerapp_wso2is (
   $service_name = 'wso2is',
   $version = '5.8.0',
   $ports = ['9443:9443','9763:9763', '4000:4000'],
+  $dropins = [],
 ){
 
   include 'dockerapp'
@@ -52,6 +67,22 @@ class dockerapp_wso2is (
     creates => "${conf_libdir}/dropins/org.wso2.carbon.logging.propfile_1.0.0.jar",
     require => File["${conf_libdir}/dropins"],
   }
+
+  $dropins.each |String $dropin| {
+    if $dropin =~ /(.*\/)(.*)[-_].*\.jar/ {
+      $base_path = $1
+      $jar_file = $2
+
+      archive {"${conf_libdir}/dropins/${jar_file}.jar":
+        ensure         => present,
+        source         => $dropin,
+        allow_insecure => true,
+        user           => $dir_owner,
+        group          => $dir_group,
+      }
+    }
+  }
+
 
   exec { "${service_name}-copy-lib":
     command => "/usr/bin/docker run --rm --name=${service_name}_cp_lib -v ${conf_libdir}/lib:/conf_dest --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/components/lib/* /conf_dest\"",
