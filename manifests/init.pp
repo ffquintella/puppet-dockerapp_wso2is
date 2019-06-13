@@ -79,6 +79,7 @@ class dockerapp_wso2is (
         allow_insecure => true,
         user           => $dir_owner,
         group          => $dir_group,
+        notify         => Docker::Run[$service_name],
       }
     }
   }
