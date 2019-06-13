@@ -30,7 +30,7 @@ This module depends of the following other modules:
 
 * ffquintella-dockerapp 
 * puppetlabs-stdblib
-* puppet-archive
+* lwf-remote_file
 
 
 ## Usage

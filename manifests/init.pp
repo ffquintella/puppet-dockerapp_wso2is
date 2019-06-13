@@ -73,13 +73,13 @@ class dockerapp_wso2is (
       $base_path = $1
       $jar_file = $2
 
-      archive {"${conf_libdir}/dropins/${jar_file}.jar":
-        ensure         => present,
-        source         => $dropin,
-        allow_insecure => true,
-        user           => $dir_owner,
-        group          => $dir_group,
-        notify         => Docker::Run[$service_name],
+      remote_file {"${conf_libdir}/dropins/${jar_file}.jar":
+        ensure      => present,
+        source      => $dropin,
+        verify_peer => false,
+        owner       => $dir_owner,
+        group       => $dir_group,
+        notify      => Docker::Run[$service_name],
       }
     }
   }
