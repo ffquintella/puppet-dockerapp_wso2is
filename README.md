@@ -31,7 +31,7 @@ This module depends of the following other modules:
 * ffquintella-dockerapp 
 * puppetlabs-stdblib
 * lwf-remote_file
-
+* ffquintella-sqlcli 
 
 ## Usage
 

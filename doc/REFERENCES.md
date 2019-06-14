@@ -58,3 +58,29 @@ use the format http(s)://url.com/dir1/dir2/filename-0.1.1.jar
 
 Default value: []
 
+##### `db_type`
+
+Data type: `String`
+
+Determines if the database is embeded, external
+embeded is the default
+
+Default value: 'embeded'
+
+##### `db_dbms`
+
+Data type: `String`
+
+Choosed the database management system to use
+Supported options are sqlserver and mysql
+
+Default value: 'sqlserver'
+
+##### `db_jdbc_driver`
+
+Data type: `String`
+
+The url to download the jdbc driver of the dbms choosen. It must be a jar file
+
+Default value: `undef`
+
