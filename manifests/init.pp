@@ -24,10 +24,16 @@
 #
 # @param [String] db_dbms 
 #   Choosed the database management system to use
-#   Supported options are sqlserver and mysql 
+#   Supported options are mssql and mysql 
 #
 # @param [String] db_jdbc_driver 
 #   The url to download the jdbc driver of the dbms choosen. It must be a jar file
+#
+# @param [String] db_hostname 
+#   The database server fqdn or ip address.
+#
+# @param [Integer] db_port 
+#   The database server port.
 #
 # @param [String] db_schema 
 #   The shema of the database 
@@ -41,18 +47,28 @@
 # @param [String] db_db_owner_password 
 #   The password of the database owner user
 #
+# @param [String] db_db_user_login 
+#   A login for a database user (not owner)
+#
+# @param [String] db_db_user_password 
+#   A password for a database user (not owner)
+#
 class dockerapp_wso2is (
-  $service_name = 'wso2is',
-  $version = '5.8.0',
-  $ports = ['9443:9443','9763:9763', '4000:4000'],
-  $dropins = [],
-  $db_type = 'embeded',
-  $db_dbms = 'sqlserver',
-  $db_jdbc_driver = undef,
-  $db_schema = '',
-  $db_create_db = false,
-  $db_db_owner_login = '',
-  $db_db_owner_password = '',
+  String $service_name = 'wso2is',
+  String $version = '5.8.0',
+  Array $ports = ['9443:9443','9763:9763', '4000:4000'],
+  Array $dropins = [],
+  String $db_type = 'embeded',
+  String $db_dbms = 'mssql',
+  String $db_jdbc_driver = '',
+  String $db_hostname = '',
+  Integer $db_port = 1433,
+  String $db_schema = '',
+  Boolean $db_create_db = false,
+  String $db_db_owner_login = '',
+  String $db_db_owner_password = '',
+  String $db_db_user_login = '',
+  String $db_db_user_password = '',
 ){
 
   include 'dockerapp'
@@ -132,8 +148,39 @@ class dockerapp_wso2is (
     require => File["${conf_libdir}/lib"],
   }
 
+  $dbconn_owner = {
+    'db_type'     => $db_dbms,
+    'db_user'     => $db_db_owner_login,
+    'db_pwd'      => $db_db_owner_password,
+    'db_hostname' => $db_hostname,
+    'db_port'     => $db_port,
+    'db_schema'   => $db_schema,
+  }
+
+  $dbconn = {
+    'db_type'     => $db_dbms,
+    'db_user'     => $db_db_user_login,
+    'db_pwd'      => $db_db_user_password,
+    'db_hostname' => $db_hostname,
+    'db_port'     => $db_port,
+    'db_schema'   => $db_schema,
+  }
+
   case $db_type {
     'external': {
+      if $db_create_db {
+        class{ 'sqlcli':}
+        sqlcli::script { "${conf_datadir}/db-scripts/${db_dbms}.sql":
+          run_once            => true,
+          database_connection => $dbconn_owner,
+        }
+      }
+
+      file {"${conf_configdir}/datasources/master-datasources.xml":
+        content => epp('dockerapp_wso2is/master-datasources.xml.epp', { 'db_conn' => $dbconn, }),
+        notify  => Docker::Run[$service_name],
+        require => File[$conf_configdir],
+      }
 
       if $db_jdbc_driver =~ /(.*\/)(.*)[-_].*\.jar/ {
         $jdbc_base_path = $1

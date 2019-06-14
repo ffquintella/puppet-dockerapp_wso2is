@@ -7,3 +7,7 @@ fixtures:
      docker: "puppetlabs/docker"
      yumrepo: "puppetlabs/yumrepo_core"
      dockerapp: "ffquintella/dockerapp"
+     sqlcli: 
+       repo: "ffquintella/sqlcli"
+       ref: "0.2.3"
+     remote_file: "lwf/remote_file"
