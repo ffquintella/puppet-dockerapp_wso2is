@@ -35,7 +35,7 @@
 # @param [Integer] db_port 
 #   The database server port.
 #
-# @param [String] db_schema 
+# @param [String] db_name 
 #   The shema of the database 
 #
 # @param [Boolean] db_create_db 
@@ -63,7 +63,7 @@ class dockerapp_wso2is (
   String $db_jdbc_driver = '',
   String $db_hostname = '',
   Integer $db_port = 1433,
-  String $db_schema = '',
+  String $db_name = '',
   Boolean $db_create_db = false,
   String $db_db_owner_login = '',
   String $db_db_owner_password = '',
@@ -154,7 +154,7 @@ class dockerapp_wso2is (
     'db_pwd'      => $db_db_owner_password,
     'db_hostname' => $db_hostname,
     'db_port'     => $db_port,
-    'db_schema'   => $db_schema,
+    'db_name'     => $db_name,
   }
 
   $dbconn = {
@@ -163,7 +163,7 @@ class dockerapp_wso2is (
     'db_pwd'      => $db_db_user_password,
     'db_hostname' => $db_hostname,
     'db_port'     => $db_port,
-    'db_schema'   => $db_schema,
+    'db_name'     => $db_name,
   }
 
   case $db_type {
@@ -171,6 +171,18 @@ class dockerapp_wso2is (
       if $db_create_db {
         class{ 'sqlcli':}
         sqlcli::script { "${conf_datadir}/db-scripts/${db_dbms}.sql":
+          run_once            => true,
+          database_connection => $dbconn_owner,
+        }
+        sqlcli::script { "${conf_datadir}/db-scripts/identity/${db_dbms}.sql":
+          run_once            => true,
+          database_connection => $dbconn_owner,
+        }
+        sqlcli::script { "${conf_datadir}/db-scripts/identity/stored-procedures/${db_dbms}-2012/mssql-tokencleanup.sql":
+          run_once            => true,
+          database_connection => $dbconn_owner,
+        }
+        sqlcli::script { "${conf_datadir}/db-scripts/identity/stored-procedures/${db_dbms}-2012/mssql-tokencleanup-restore.sql":
           run_once            => true,
           database_connection => $dbconn_owner,
         }

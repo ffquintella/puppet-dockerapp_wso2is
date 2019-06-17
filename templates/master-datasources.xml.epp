@@ -15,7 +15,7 @@
         <definition type="RDBMS">
               <configuration>
                   <% if $db_conn['db_type'] == 'mssql' { -%>
-                  <url>jdbc:sqlserver://<%= $db_conn['db_hostname'] -%>:<%= $db_conn['db_port'] -%>;databaseName=<%= $db_conn['db_schema'] -%>;SendStringParametersAsUnicode=false</url>
+                  <url>jdbc:sqlserver://<%= $db_conn['db_hostname'] -%>:<%= $db_conn['db_port'] -%>;databaseName=<%= $db_conn['db_name'] -%>;SendStringParametersAsUnicode=false</url>
                   <driverClassName>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverClassName>
                   <%} -%>
                   <username><%= $db_conn['db_user'] -%></username>
