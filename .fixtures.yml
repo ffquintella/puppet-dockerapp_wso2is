@@ -9,5 +9,5 @@ fixtures:
      dockerapp: "ffquintella/dockerapp"
      sqlcli: 
        repo: "ffquintella/sqlcli"
-       ref: "0.2.3"
+       ref: "1.0.4"
      remote_file: "lwf/remote_file"

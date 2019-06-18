@@ -53,6 +53,12 @@
 # @param [String] db_db_user_password 
 #   A password for a database user (not owner)
 #
+# @param [String] adm_user 
+#   The initial system admin account  
+#
+# @param [String] adm_pwd 
+#   The initial system admin account password 
+#
 class dockerapp_wso2is (
   String $service_name = 'wso2is',
   String $version = '5.8.0',
@@ -69,6 +75,8 @@ class dockerapp_wso2is (
   String $db_db_owner_password = '',
   String $db_db_user_login = '',
   String $db_db_user_password = '',
+  String $adm_user = 'admin',
+  String $adm_pwd = 'secret',
 ){
 
   include 'dockerapp'
@@ -190,6 +198,15 @@ class dockerapp_wso2is (
 
       file {"${conf_configdir}/datasources/master-datasources.xml":
         content => epp('dockerapp_wso2is/master-datasources.xml.epp', { 'db_conn' => $dbconn, }),
+        notify  => Docker::Run[$service_name],
+        require => File[$conf_configdir],
+      }
+
+      file {"${conf_configdir}/user-mgt.xml":
+        content => epp('dockerapp_wso2is/user-mgt.xml.epp', {
+          'adm_user' => $adm_user,
+          'adm_pwd'  => $adm_pwd,
+          }),
         notify  => Docker::Run[$service_name],
         require => File[$conf_configdir],
       }
