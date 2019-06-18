@@ -22,6 +22,9 @@ describe 'dockerapp_wso2is' do
       it { is_expected.to contain_class('docker') }
       it { is_expected.to contain_class('sqlcli') }
       it { is_expected.to contain_file('/srv/application-data/wso2_test') }
+      it { is_expected.to contain_file('/srv/application-data/wso2_test/db-scripts') }
+      it { is_expected.to contain_file('/srv/application-data/wso2_test/solr-data') }
+      it { is_expected.to contain_file('/srv/application-data/wso2_test/respository-resources-security') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test/datasources/master-datasources.xml') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test/user-mgt.xml') }

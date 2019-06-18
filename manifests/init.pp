@@ -116,6 +116,30 @@ class dockerapp_wso2is (
     group  => $dir_group,
   }
 
+  file{ "${conf_datadir}/solr-data":
+    ensure => directory,
+    owner  => $dir_owner,
+    group  => $dir_group,
+  }
+
+  file{ "${conf_datadir}/database":
+    ensure => directory,
+    owner  => $dir_owner,
+    group  => $dir_group,
+  }
+
+  file{ "${conf_datadir}/directory":
+    ensure => directory,
+    owner  => $dir_owner,
+    group  => $dir_group,
+  }
+
+  file{ "${conf_datadir}/respository-resources-security":
+    ensure => directory,
+    owner  => $dir_owner,
+    group  => $dir_group,
+  }
+
   exec { "${service_name}-copy-dbscripts":
     command => "/usr/bin/docker run --rm --name=${service_name}_tmp -v ${conf_datadir}/db-scripts:/db_scripts --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/dbscripts/* /db_scripts\"",
     creates => "${conf_datadir}/db-scripts/mssql.sql",
@@ -132,6 +156,12 @@ class dockerapp_wso2is (
     command => "/usr/bin/docker run --rm --name=${service_name}_cp_dropins -v ${conf_libdir}/dropins:/conf_dest --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/components/dropins/* /conf_dest\"",
     creates => "${conf_libdir}/dropins/org.wso2.carbon.logging.propfile_1.0.0.jar",
     require => File["${conf_libdir}/dropins"],
+  }
+
+  exec { "${service_name}-copy-security":
+    command => "/usr/bin/docker run --rm --name=${service_name}_cp_dropins -v ${conf_datadir}/respository-resources-security:/conf_dest --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/resources/security/* /conf_dest\"",
+    creates => "${conf_datadir}/respository-resources-security/wso2carbon.jks",
+    require => File["${conf_datadir}/respository-resources-security"],
   }
 
   $dropins.each |String $dropin| {
@@ -232,6 +262,10 @@ class dockerapp_wso2is (
   }
 
   $volumes = [
+    "${conf_datadir}/directory:/home/wso2carbon/wso2is-${version}/repository/data/org.wso2.carbon.directory",
+    "${conf_datadir}/database:/home/wso2carbon/wso2is-${version}/repository/database",
+    "${conf_datadir}/respository-resources-security:/home/wso2carbon/wso2is-${version}/repository/resources/security",
+    "${conf_datadir}/solr-data:/home/wso2carbon/wso2is-${version}/solr/data",
     "${conf_configdir}:/home/wso2carbon/wso2is-${version}/repository/conf",
     "${conf_logdir}:/home/wso2carbon/wso2is-${version}/repository/logs",
     "${conf_libdir}/dropins:/home/wso2carbon/wso2is-${version}/repository/components/dropins",
