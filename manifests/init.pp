@@ -237,7 +237,7 @@ class dockerapp_wso2is (
       'ccm_srvc'    => $ccm_srvc,
       'ccm_key'     => $db_db_owner_pwd_ccm_key,
       'ccm_env'     => $ccm_environment,
-      'ccm_api_key' => $ccm_api_key,
+      'ccm_api_key' => $ccm_app_key,
     }
 
     $dbconn = {
@@ -250,7 +250,7 @@ class dockerapp_wso2is (
       'ccm_srvc'    => $ccm_srvc,
       'ccm_key'     => $db_db_owner_pwd_ccm_key,
       'ccm_env'     => $ccm_environment,
-      'ccm_api_key' => $ccm_api_key,
+      'ccm_api_key' => $ccm_app_key,
     }
   }else{
     $dbconn_owner = {

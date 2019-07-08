@@ -1,6 +1,6 @@
 {
   "name": "ffquintella-dockerapp_wso2is",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "author": "Felipe Quintella",
   "summary": "This module install wso2 Identity Server using docker.",
   "license": "GPL-3.0",
@@ -65,7 +65,7 @@
       "version_requirement": ">= 4.10.0 < 7.0.0"
     }
   ],
-  "pdk-version": "1.9.1",
-  "template-url": "file:///opt/puppetlabs/pdk/share/cache/pdk-templates.git",
-  "template-ref": "1.9.1-0-g6945d31"
+  "pdk-version": "1.11.0",
+  "template-url": "pdk-default#1.11.0",
+  "template-ref": "1.11.0-0-g67637d4"
 }
