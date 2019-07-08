@@ -15,6 +15,7 @@ describe 'dockerapp_wso2is' do
           adm_user: 'test',
           adm_pwd: 'test',
           use_external_auth_app: true,
+          use_ccm: true,
         }
       end
 
@@ -22,6 +23,7 @@ describe 'dockerapp_wso2is' do
       it { is_expected.to contain_class('dockerapp') }
       it { is_expected.to contain_class('docker') }
       it { is_expected.to contain_class('sqlcli') }
+      it { is_expected.to contain_class('ccm_cli::api') }    
       it { is_expected.to contain_file('/srv/application-data/wso2_test') }
       it { is_expected.to contain_file('/srv/application-data/wso2_test/db-scripts') }
       it { is_expected.to contain_file('/srv/application-data/wso2_test/solr-data') }

@@ -3,7 +3,7 @@
   "version": "0.3.4",
   "author": "Felipe Quintella",
   "summary": "This module install wso2 Identity Server using docker.",
-  "license": "GPL-3.0-or-later",
+  "license": "GPL-3.0",
   "source": "https://github.com/ffquintella/puppet-dockerapp_wso2is",
   "project_page": "https://github.com/ffquintella/puppet-dockerapp_wso2is",
   "issues_url": "https://github.com/ffquintella/puppet-dockerapp_wso2is/issues",
@@ -26,7 +26,11 @@
     },
     {
       "name": "ffquintella/sqlcli",
-      "version_requirement": ">= 1.0.4 < 2.0.0"
+      "version_requirement": ">= 1.0.6 < 2.0.0"
+    },
+    {
+      "name": "ffquintella/ccm_cli",
+      "version_requirement": ">= 0.1.4 < 2.0.0"
     }
   ],
   "operatingsystem_support": [

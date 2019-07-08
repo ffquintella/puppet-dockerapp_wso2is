@@ -41,17 +41,35 @@
 # @param [Boolean] db_create_db 
 #   If puppet should create the database or not
 #
+# @param [Boolean] use_ccm
+#   If you use ccm to store database passwords
+#
+# @param [String] ccm_srvc 
+#   The srvc record to locate the ccm server
+#
+# @param [String] ccm_app_key 
+#   The app key to be used on the ccm server
+#
+# @param [String] ccm_environment 
+#   The ccm environment to call the values
+#
 # @param [String] db_db_owner_login 
 #   The login of the database owner user
 #
 # @param [String] db_db_owner_password 
 #   The password of the database owner user
 #
+# @param [String] db_db_owner_pwd_ccm_key 
+#   The ccm key to the db ower password
+#
 # @param [String] db_db_user_login 
 #   A login for a database user (not owner)
 #
 # @param [String] db_db_user_password 
 #   A password for a database user (not owner)
+#
+# @param [String] db_db_user_pwd_ccm_key 
+#   The ccm key for the db user password
 #
 # @param [String] adm_user 
 #   The initial system admin account  
@@ -83,10 +101,16 @@ class dockerapp_wso2is (
   Integer $db_port = 1433,
   String $db_name = '',
   Boolean $db_create_db = false,
+  Boolean $use_ccm = false,
+  String $ccm_srvc = '',
+  String $ccm_app_key = '',
+  String $ccm_environment = '',
   String $db_db_owner_login = '',
   String $db_db_owner_password = '',
+  String $db_db_owner_pwd_ccm_key = '',
   String $db_db_user_login = '',
   String $db_db_user_password = '',
+  String $db_db_user_pwd_ccm_key = '',
   String $adm_user = 'admin',
   String $adm_pwd = 'secret',
   Boolean $use_external_auth_app = false,
@@ -202,23 +226,50 @@ class dockerapp_wso2is (
     creates => "${conf_libdir}/lib/dnsjava-2.1.8.jar",
     require => File["${conf_libdir}/lib"],
   }
+  if $use_ccm {
+    $dbconn_owner = {
+      'db_type'     => $db_dbms,
+      'db_user'     => $db_db_owner_login,
+      'db_pwd'      => '',
+      'db_hostname' => $db_hostname,
+      'db_port'     => $db_port,
+      'db_name'     => $db_name,
+      'ccm_srvc'    => $ccm_srvc,
+      'ccm_key'     => $db_db_owner_pwd_ccm_key,
+      'ccm_env'     => $ccm_environment,
+      'ccm_api_key' => $ccm_api_key,
+    }
 
-  $dbconn_owner = {
-    'db_type'     => $db_dbms,
-    'db_user'     => $db_db_owner_login,
-    'db_pwd'      => $db_db_owner_password,
-    'db_hostname' => $db_hostname,
-    'db_port'     => $db_port,
-    'db_name'     => $db_name,
-  }
+    $dbconn = {
+      'db_type'     => $db_dbms,
+      'db_user'     => $db_db_user_login,
+      'db_pwd'      => '',
+      'db_hostname' => $db_hostname,
+      'db_port'     => $db_port,
+      'db_name'     => $db_name,
+      'ccm_srvc'    => $ccm_srvc,
+      'ccm_key'     => $db_db_owner_pwd_ccm_key,
+      'ccm_env'     => $ccm_environment,
+      'ccm_api_key' => $ccm_api_key,
+    }
+  }else{
+    $dbconn_owner = {
+      'db_type'     => $db_dbms,
+      'db_user'     => $db_db_owner_login,
+      'db_pwd'      => $db_db_owner_password,
+      'db_hostname' => $db_hostname,
+      'db_port'     => $db_port,
+      'db_name'     => $db_name,
+    }
 
-  $dbconn = {
-    'db_type'     => $db_dbms,
-    'db_user'     => $db_db_user_login,
-    'db_pwd'      => $db_db_user_password,
-    'db_hostname' => $db_hostname,
-    'db_port'     => $db_port,
-    'db_name'     => $db_name,
+    $dbconn = {
+      'db_type'     => $db_dbms,
+      'db_user'     => $db_db_user_login,
+      'db_pwd'      => $db_db_user_password,
+      'db_hostname' => $db_hostname,
+      'db_port'     => $db_port,
+      'db_name'     => $db_name,
+    }
   }
 
   case $db_type {
@@ -228,18 +279,22 @@ class dockerapp_wso2is (
         sqlcli::script { "${conf_datadir}/db-scripts/${db_dbms}.sql":
           run_once            => true,
           database_connection => $dbconn_owner,
+          use_ccm_integration => $use_ccm,
         }
         sqlcli::script { "${conf_datadir}/db-scripts/identity/${db_dbms}.sql":
           run_once            => true,
           database_connection => $dbconn_owner,
+          use_ccm_integration => $use_ccm,
         }
         sqlcli::script { "${conf_datadir}/db-scripts/identity/stored-procedures/${db_dbms}-2012/mssql-tokencleanup.sql":
           run_once            => true,
           database_connection => $dbconn_owner,
+          use_ccm_integration => $use_ccm,
         }
         sqlcli::script { "${conf_datadir}/db-scripts/identity/stored-procedures/${db_dbms}-2012/mssql-tokencleanup-restore.sql":
           run_once            => true,
           database_connection => $dbconn_owner,
+          use_ccm_integration => $use_ccm,
         }
       }
 
