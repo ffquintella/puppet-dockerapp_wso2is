@@ -59,6 +59,18 @@
 # @param [String] adm_pwd 
 #   The initial system admin account password 
 #
+# @param [Boolean] use_external_auth_app 
+#   If wso2is should use an external auth app to display the login page
+#
+# @param [String] external_auth_endpoint 
+#   The url to the external auth endpoint
+#
+# @param [String] external_auth_endpoint_retry 
+#   The url to the external auth endpoint retry page
+#
+# @param [String] external_auth_endpoint_claims 
+#   The url to the external auth endpoint claims page
+#
 class dockerapp_wso2is (
   String $service_name = 'wso2is',
   String $version = '5.8.0',
@@ -77,6 +89,10 @@ class dockerapp_wso2is (
   String $db_db_user_password = '',
   String $adm_user = 'admin',
   String $adm_pwd = 'secret',
+  Boolean $use_external_auth_app = false,
+  String $external_auth_endpoint = '',
+  String $external_auth_endpoint_retry = '',
+  String $external_auth_endpoint_claims = '',
 ){
 
   include 'dockerapp'
@@ -176,6 +192,7 @@ class dockerapp_wso2is (
         owner       => $dir_owner,
         group       => $dir_group,
         notify      => Docker::Run[$service_name],
+        require     => File["${conf_libdir}/dropins"],
       }
     }
   }
@@ -259,6 +276,18 @@ class dockerapp_wso2is (
     default: {
 
     }
+  }
+
+  if $use_external_auth_app {
+      file {"${conf_configdir}/identity/application-authentication.xml":
+        content => epp('dockerapp_wso2is/application-authentication.xml.epp',
+          { 'auth_endpoint'        => $external_auth_endpoint,
+            'auth_endpoint_retry'  => $external_auth_endpoint_retry,
+            'auth_endpoint_claims' => $external_auth_endpoint_claims,
+        }),
+        notify  => Docker::Run[$service_name],
+        require => File[$conf_configdir],
+      }
   }
 
   $volumes = [

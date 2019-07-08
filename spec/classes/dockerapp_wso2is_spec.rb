@@ -14,6 +14,7 @@ describe 'dockerapp_wso2is' do
           db_jdbc_driver: 'https://repo.srvc.fgv.br/repository/webstorage/libs/mssql-jdbc-7.2.2.jre8.jar',
           adm_user: 'test',
           adm_pwd: 'test',
+          use_external_auth_app: true,
         }
       end
 
@@ -27,6 +28,7 @@ describe 'dockerapp_wso2is' do
       it { is_expected.to contain_file('/srv/application-data/wso2_test/respository-resources-security') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test/datasources/master-datasources.xml') }
+      it { is_expected.to contain_file('/srv/application-config/wso2_test/identity/application-authentication.xml') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test/user-mgt.xml') }
       it { is_expected.to contain_file('/srv/application-lib/wso2_test') }
       it { is_expected.to contain_file('/srv/application-lib/wso2_test/dropins') }

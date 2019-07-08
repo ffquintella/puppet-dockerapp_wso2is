@@ -9,7 +9,6 @@ Development releases NOT STABLE
 **Features**
 
 
-
 ## Release 0.1.0
 
 Testing release it is not funtional yet
