@@ -72,9 +72,9 @@ Default value: 'embeded'
 Data type: `String`
 
 Choosed the database management system to use
-Supported options are sqlserver and mysql
+Supported options are mssql and mysql
 
-Default value: 'sqlserver'
+Default value: 'mssql'
 
 ##### `db_jdbc_driver`
 
@@ -82,5 +82,165 @@ Data type: `String`
 
 The url to download the jdbc driver of the dbms choosen. It must be a jar file
 
-Default value: `undef`
+Default value: ''
+
+##### `db_hostname`
+
+Data type: `String`
+
+The database server fqdn or ip address.
+
+Default value: ''
+
+##### `db_port`
+
+Data type: `Integer`
+
+The database server port.
+
+Default value: 1433
+
+##### `db_name`
+
+Data type: `String`
+
+The shema of the database
+
+Default value: ''
+
+##### `db_create_db`
+
+Data type: `Boolean`
+
+If puppet should create the database or not
+
+Default value: `false`
+
+##### `use_ccm`
+
+Data type: `Boolean`
+
+If you use ccm to store database passwords
+
+Default value: `false`
+
+##### `ccm_srvc`
+
+Data type: `String`
+
+The srvc record to locate the ccm server
+
+Default value: ''
+
+##### `ccm_app_key`
+
+Data type: `String`
+
+The app key to be used on the ccm server
+
+Default value: ''
+
+##### `ccm_environment`
+
+Data type: `String`
+
+The ccm environment to call the values
+
+Default value: ''
+
+##### `db_db_owner_login`
+
+Data type: `String`
+
+The login of the database owner user
+
+Default value: ''
+
+##### `db_db_owner_password`
+
+Data type: `String`
+
+The password of the database owner user
+
+Default value: ''
+
+##### `db_db_owner_pwd_ccm_key`
+
+Data type: `String`
+
+The ccm key to the db ower password
+
+Default value: ''
+
+##### `db_db_user_login`
+
+Data type: `String`
+
+A login for a database user (not owner)
+
+Default value: ''
+
+##### `db_db_user_password`
+
+Data type: `String`
+
+A password for a database user (not owner)
+
+Default value: ''
+
+##### `db_db_user_pwd_ccm_key`
+
+Data type: `String`
+
+The ccm key for the db user password
+
+Default value: ''
+
+##### `adm_user`
+
+Data type: `String`
+
+The initial system admin account
+
+Default value: 'admin'
+
+##### `adm_pwd`
+
+Data type: `String`
+
+The initial system admin account password
+
+Default value: 'secret'
+
+##### `use_external_auth_app`
+
+Data type: `Boolean`
+
+If wso2is should use an external auth app to display the login page
+
+Default value: `false`
+
+##### `external_auth_endpoint`
+
+Data type: `String`
+
+The url to the external auth endpoint
+
+Default value: ''
+
+##### `external_auth_endpoint_retry`
+
+Data type: `String`
+
+The url to the external auth endpoint retry page
+
+Default value: ''
+
+##### `external_auth_endpoint_claims`
+
+Data type: `String`
+
+The url to the external auth endpoint claims page
+
+Default value: ''
 
