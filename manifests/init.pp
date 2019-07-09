@@ -286,12 +286,12 @@ class dockerapp_wso2is (
           database_connection => $dbconn_owner,
           use_ccm_integration => $use_ccm,
         }
-        sqlcli::script { "${conf_datadir}/db-scripts/identity/stored-procedures/${db_dbms}-2012/mssql-tokencleanup.sql":
+        sqlcli::script { "${conf_datadir}/db-scripts/identity/stored-procedures/${db_dbms}-2012-x/mssql-tokencleanup.sql":
           run_once            => true,
           database_connection => $dbconn_owner,
           use_ccm_integration => $use_ccm,
         }
-        sqlcli::script { "${conf_datadir}/db-scripts/identity/stored-procedures/${db_dbms}-2012/mssql-tokencleanup-restore.sql":
+        sqlcli::script { "${conf_datadir}/db-scripts/identity/stored-procedures/${db_dbms}-2012-x/mssql-tokencleanup-restore.sql":
           run_once            => true,
           database_connection => $dbconn_owner,
           use_ccm_integration => $use_ccm,

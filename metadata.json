@@ -1,6 +1,6 @@
 {
   "name": "ffquintella-dockerapp_wso2is",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "author": "Felipe Quintella",
   "summary": "This module install wso2 Identity Server using docker.",
   "license": "GPL-3.0",
@@ -26,7 +26,7 @@
     },
     {
       "name": "ffquintella/sqlcli",
-      "version_requirement": ">= 1.0.6 < 2.0.0"
+      "version_requirement": ">= 1.1.1 < 2.0.0"
     },
     {
       "name": "ffquintella/ccm_cli",
