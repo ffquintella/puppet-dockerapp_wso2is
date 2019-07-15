@@ -305,7 +305,7 @@ class dockerapp_wso2is (
           require => File[$conf_configdir],
         }
       }else{
-        ccm_cli::scheduled {"${conf_configdir}/datasources/master-datasources.xml":
+        ccm_cli::scheduled { 'template-master-datasources.xml':
           template_content    => base64('encode', epp('dockerapp_wso2is/master-datasources.xml.epp',
           { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, })),
           authorization_token => $dbconn['ccm_api_key'],
@@ -313,7 +313,7 @@ class dockerapp_wso2is (
           configurations      => [],
           ccm_srv_record      => $ccm_srvc,
           destination_file    => "${conf_configdir}/datasources/master-datasources.xml",
-          environment         => $dbconn['ccm_environment'],
+          environment         => $ccm_environment,
           notify              => Docker::Run[$service_name],
         }
       }
