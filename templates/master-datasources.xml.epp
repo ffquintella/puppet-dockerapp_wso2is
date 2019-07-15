@@ -1,4 +1,5 @@
 <%- | Hash $db_conn,
+      Boolean $use_ccm = false,
 | -%>
 <datasources-configuration xmlns:svns="http://org.wso2.securevault/configuration">
     <providers>
@@ -19,7 +20,11 @@
                   <driverClassName>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverClassName>
                   <%} -%>
                   <username><%= $db_conn['db_user'] -%></username>
+                  <% if !$use_ccm { -%>
                   <password><%= $db_conn['db_pwd'] -%></password>
+                  <%} else { -%>
+                  <password><%%= credential[0] %%></password>
+                  <%} -%>
                   <maxActive>50</maxActive>
                   <maxWait>60000</maxWait>
                   <testOnBorrow>true</testOnBorrow>

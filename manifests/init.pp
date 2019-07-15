@@ -298,11 +298,26 @@ class dockerapp_wso2is (
         }
       }
 
-      file {"${conf_configdir}/datasources/master-datasources.xml":
-        content => epp('dockerapp_wso2is/master-datasources.xml.epp', { 'db_conn' => $dbconn, }),
-        notify  => Docker::Run[$service_name],
-        require => File[$conf_configdir],
+      if !$use_ccm {
+        file {"${conf_configdir}/datasources/master-datasources.xml":
+          content => epp('dockerapp_wso2is/master-datasources.xml.epp', { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, }),
+          notify  => Docker::Run[$service_name],
+          require => File[$conf_configdir],
+        }
+      }else{
+        ccm_cli::scheduled {"${conf_configdir}/datasources/master-datasources.xml":
+          template_content    => base64('encode', epp('dockerapp_wso2is/master-datasources.xml.epp',
+          { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, })),
+          authorization_token => $dbconn['ccm_api_key'],
+          credentials         => [$dbconn['ccm_key']],
+          configurations      => [],
+          ccm_srv_record      => $ccm_srvc,
+          destination_file    => "${conf_configdir}/datasources/master-datasources.xml",
+          environment         => $dbconn['ccm_environment'],
+          notify              => Docker::Run[$service_name],
+        }
       }
+
 
       file {"${conf_configdir}/user-mgt.xml":
         content => epp('dockerapp_wso2is/user-mgt.xml.epp', {

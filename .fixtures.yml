@@ -8,6 +8,7 @@ fixtures:
      yumrepo: "puppetlabs/yumrepo_core"
      dockerapp: "ffquintella/dockerapp"
      ccm_cli: "ffquintella/ccm_cli"
+     cron: "puppetlabs/cron_core"
      sqlcli: 
        repo: "ffquintella/sqlcli"
        ref: "1.0.6"
