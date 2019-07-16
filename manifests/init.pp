@@ -301,6 +301,11 @@ class dockerapp_wso2is (
           database_connection => $dbconn_owner,
           use_ccm_integration => $use_ccm,
         }
+        sqlcli::script { "${conf_datadir}/db-scripts/bps/bpel/create/${db_dbms}.sql":
+          run_once            => true,
+          database_connection => $dbconn_owner,
+          use_ccm_integration => $use_ccm,
+        }
         sqlcli::script { "${conf_datadir}/db-scripts/identity/stored-procedures/${db_dbms}-2012-x/mssql-tokencleanup.sql":
           run_once            => true,
           database_connection => $dbconn_owner,
@@ -319,6 +324,16 @@ class dockerapp_wso2is (
           notify  => Docker::Run[$service_name],
           require => File[$conf_configdir],
         }
+        file {"${conf_configdir}/datasources/metrics-datasources.xml":
+          content => epp('dockerapp_wso2is/metrics-datasources.xml.epp', { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, }),
+          notify  => Docker::Run[$service_name],
+          require => File[$conf_configdir],
+        }
+        file {"${conf_configdir}/datasources/bps-datasources.xml":
+          content => epp('dockerapp_wso2is/bps-datasources.xml.epp', { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, }),
+          notify  => Docker::Run[$service_name],
+          require => File[$conf_configdir],
+        }
       }else{
         ccm_cli::scheduled { 'template-master-datasources.xml':
           template_content    => base64('encode', epp('dockerapp_wso2is/master-datasources.xml.epp',
@@ -328,6 +343,28 @@ class dockerapp_wso2is (
           configurations      => [],
           ccm_srv_record      => $ccm_srvc,
           destination_file    => "${conf_configdir}/datasources/master-datasources.xml",
+          environment         => $ccm_environment,
+          notify              => Docker::Run[$service_name],
+        }
+        ccm_cli::scheduled { 'template-metrics-datasources.xml':
+          template_content    => base64('encode', epp('dockerapp_wso2is/metrics-datasources.xml.epp',
+          { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, })),
+          authorization_token => $dbconn['ccm_api_key'],
+          credentials         => [$dbconn['ccm_key']],
+          configurations      => [],
+          ccm_srv_record      => $ccm_srvc,
+          destination_file    => "${conf_configdir}/datasources/metrics-datasources.xml",
+          environment         => $ccm_environment,
+          notify              => Docker::Run[$service_name],
+        }
+        ccm_cli::scheduled { 'template-bps-datasources.xml':
+          template_content    => base64('encode', epp('dockerapp_wso2is/bps-datasources.xml.epp',
+          { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, })),
+          authorization_token => $dbconn['ccm_api_key'],
+          credentials         => [$dbconn['ccm_key']],
+          configurations      => [],
+          ccm_srv_record      => $ccm_srvc,
+          destination_file    => "${conf_configdir}/datasources/bps-datasources.xml",
           environment         => $ccm_environment,
           notify              => Docker::Run[$service_name],
         }

@@ -35,6 +35,8 @@ describe 'dockerapp_wso2is' do
       it { is_expected.to contain_file('/srv/application-data/wso2_test/respository-resources-security') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test/datasources/master-datasources.xml') }
+      it { is_expected.to contain_file('/srv/application-config/wso2_test/datasources/metrics-datasources.xml') }
+      it { is_expected.to contain_file('/srv/application-config/wso2_test/datasources/bps-datasources.xml') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test/identity/application-authentication.xml') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test/user-mgt.xml') }
       it { is_expected.to contain_file('/srv/application-lib/wso2_test') }
@@ -76,7 +78,9 @@ describe 'dockerapp_wso2is' do
       it { is_expected.to contain_file('/srv/application-data/wso2_test/solr-data') }
       it { is_expected.to contain_file('/srv/application-data/wso2_test/respository-resources-security') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test') }
-      it { is_expected.to contain_ccm_cli__scheduled('/srv/application-config/wso2_test/datasources/master-datasources.xml') }
+      it { is_expected.to contain_ccm_cli__scheduled('template-master-datasources.xml') }
+      it { is_expected.to contain_ccm_cli__scheduled('template-metrics-datasources.xml') }
+      it { is_expected.to contain_ccm_cli__scheduled('template-bps-datasources.xml') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test/identity/application-authentication.xml') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test/user-mgt.xml') }
       it { is_expected.to contain_file('/srv/application-lib/wso2_test') }

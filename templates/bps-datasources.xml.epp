@@ -1,0 +1,38 @@
+<%- | Hash $db_conn,
+      Boolean $use_ccm = false,
+| -%>
+<datasources-configuration xmlns:svns="http://org.wso2.securevault/configuration">
+    <providers>
+        <provider>org.wso2.carbon.ndatasource.rdbms.RDBMSDataSourceReader</provider>
+    </providers>
+
+    <datasource>
+      <name>BPS_DS</name>
+      <description></description>
+      <jndiConfig>
+          <name>bpsds</name>
+      </jndiConfig>
+      <definition type="RDBMS">
+              <configuration>
+                  <% if $db_conn['db_type'] == 'mssql' { -%>
+                  <url>jdbc:sqlserver://<%= $db_conn['db_hostname'] -%>:<%= $db_conn['db_port'] -%>;databaseName=<%= $db_conn['db_name'] -%>;SendStringParametersAsUnicode=false</url>
+                  <driverClassName>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverClassName>
+                  <%} -%>
+                  <username><%= $db_conn['db_user'] -%></username>
+                  <% if !$use_ccm { -%>
+                  <password><%= $db_conn['db_pwd'] -%></password>
+                  <%} else { -%>
+                  <password><%%= credential[0] %%></password>
+                  <%} -%>
+                  <maxActive>50</maxActive>
+                  <maxWait>60000</maxWait>
+                  <testOnBorrow>true</testOnBorrow>
+                  <validationQuery>SELECT 1</validationQuery>
+                  <validationInterval>30000</validationInterval>
+                  <defaultAutoCommit>false</defaultAutoCommit>
+              </configuration>
+      </definition>
+    </datasource>
+  </datasources>
+
+</datasources-configuration>

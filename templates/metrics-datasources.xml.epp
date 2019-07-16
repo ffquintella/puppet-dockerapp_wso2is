@@ -1,0 +1,38 @@
+<%- | Hash $db_conn,
+      Boolean $use_ccm = false,
+| -%>
+<datasources-configuration xmlns:svns="http://org.wso2.securevault/configuration">
+    <providers>
+        <provider>org.wso2.carbon.ndatasource.rdbms.RDBMSDataSourceReader</provider>
+    </providers>
+
+    <datasource>
+      <name>WSO2_METRICS_DB</name>
+      <description>The default datasource used for WSO2 Carbon Metrics</description>
+      <jndiConfig>
+          <name>jdbc/WSO2MetricsDB</name>
+      </jndiConfig>
+      <definition type="RDBMS">
+              <configuration>
+                  <% if $db_conn['db_type'] == 'mssql' { -%>
+                  <url>jdbc:sqlserver://<%= $db_conn['db_hostname'] -%>:<%= $db_conn['db_port'] -%>;databaseName=<%= $db_conn['db_name'] -%>;SendStringParametersAsUnicode=false</url>
+                  <driverClassName>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverClassName>
+                  <%} -%>
+                  <username><%= $db_conn['db_user'] -%></username>
+                  <% if !$use_ccm { -%>
+                  <password><%= $db_conn['db_pwd'] -%></password>
+                  <%} else { -%>
+                  <password><%%= credential[0] %%></password>
+                  <%} -%>
+                  <maxActive>50</maxActive>
+                  <maxWait>60000</maxWait>
+                  <testOnBorrow>true</testOnBorrow>
+                  <validationQuery>SELECT 1</validationQuery>
+                  <validationInterval>30000</validationInterval>
+                  <defaultAutoCommit>false</defaultAutoCommit>
+              </configuration>
+      </definition>
+    </datasource>
+  </datasources>
+
+</datasources-configuration>
