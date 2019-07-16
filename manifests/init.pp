@@ -281,7 +281,22 @@ class dockerapp_wso2is (
           database_connection => $dbconn_owner,
           use_ccm_integration => $use_ccm,
         }
+        sqlcli::script { "${conf_datadir}/db-scripts/metrics/${db_dbms}.sql":
+          run_once            => true,
+          database_connection => $dbconn_owner,
+          use_ccm_integration => $use_ccm,
+        }
+        sqlcli::script { "${conf_datadir}/db-scripts/consent/${db_dbms}.sql":
+          run_once            => true,
+          database_connection => $dbconn_owner,
+          use_ccm_integration => $use_ccm,
+        }
         sqlcli::script { "${conf_datadir}/db-scripts/identity/${db_dbms}.sql":
+          run_once            => true,
+          database_connection => $dbconn_owner,
+          use_ccm_integration => $use_ccm,
+        }
+        sqlcli::script { "${conf_datadir}/db-scripts/identity/uma/${db_dbms}.sql":
           run_once            => true,
           database_connection => $dbconn_owner,
           use_ccm_integration => $use_ccm,
