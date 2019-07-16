@@ -5,7 +5,7 @@
     <providers>
         <provider>org.wso2.carbon.ndatasource.rdbms.RDBMSDataSourceReader</provider>
     </providers>
-
+  <datasources>
     <datasource>
       <name>BPS_DS</name>
       <description></description>
