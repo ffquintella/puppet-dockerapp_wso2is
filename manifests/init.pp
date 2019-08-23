@@ -415,6 +415,7 @@ class dockerapp_wso2is (
       file {"${conf_configdir}/carbon.xml":
         content => epp('dockerapp_wso2is/carbon.xml.epp', {
           'is_fqdn' => $is_fqdn,
+          'version' => $version
           }),
         notify  => Docker::Run[$service_name],
         require => File[$conf_configdir],
