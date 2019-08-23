@@ -39,11 +39,14 @@ describe 'dockerapp_wso2is' do
       it { is_expected.to contain_file('/srv/application-config/wso2_test/datasources/bps-datasources.xml') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test/identity/application-authentication.xml') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test/user-mgt.xml') }
+      it { is_expected.to contain_file('/srv/application-config/wso2_test/carbon.xml') }
+      it { is_expected.to contain_file('/srv/application-config/wso2_test/axis2/axis2.xml') }
       it { is_expected.to contain_file('/srv/application-lib/wso2_test') }
       it { is_expected.to contain_file('/srv/application-lib/wso2_test/dropins') }
       it { is_expected.to contain_file('/srv/application-lib/wso2_test/lib') }
       it { is_expected.to contain_file('/srv/application-log/wso2_test') }
       it { is_expected.to contain_file('/srv/scripts/wso2_test') }
+      
     end
     context "ccm_client" do
       let(:facts) { os_facts }

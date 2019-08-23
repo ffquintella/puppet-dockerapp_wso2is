@@ -89,6 +89,21 @@
 # @param [String] external_auth_endpoint_claims 
 #   The url to the external auth endpoint claims page
 #
+# @param [Boolean] enable_ha 
+#   This paramenter allows the changes needed to enable a high avaliability setup
+#
+# @param [String] ha_cluster_name 
+#   The name of the ha cluster
+#
+# @param [String] alternate_deployment_dir 
+#   An alternate deployment dir to be mounted in case of need
+#
+# @param [String] alternate_tenants_dir 
+#   An alternate tenants dir to be mounted in case of need
+#
+# @param [Boolean] use_alternate_dirs 
+#   Enable or disable the use of alternate dirs
+#
 class dockerapp_wso2is (
   String $service_name = 'wso2is',
   String $version = '5.8.0',
@@ -117,6 +132,13 @@ class dockerapp_wso2is (
   String $external_auth_endpoint = '',
   String $external_auth_endpoint_retry = '',
   String $external_auth_endpoint_claims = '',
+  Boolean $enable_ha = false,
+  String $ha_cluster_name = 'wso2cluster',
+  Array $ha_members = ['127.0.0.1'],
+  String $is_fqdn = $fqdn,
+  String $alternate_deployment_dir = '',
+  String $alternate_tenants_dir = '',
+  Boolean $use_alternate_dirs = false
 ){
 
   include 'dockerapp'
@@ -380,6 +402,24 @@ class dockerapp_wso2is (
         require => File[$conf_configdir],
       }
 
+      file {"${conf_configdir}/axis2/axis2.xml":
+        content => epp('dockerapp_wso2is/axis2.xml.epp', {
+          'enable_ha'    => $enable_ha,
+          'cluster_name' => $ha_cluster_name,
+          'ha_members'   => $ha_members,
+          }),
+        notify  => Docker::Run[$service_name],
+        require => File[$conf_configdir],
+      }
+
+      file {"${conf_configdir}/carbon.xml":
+        content => epp('dockerapp_wso2is/carbon.xml.epp', {
+          'is_fqdn' => $is_fqdn,
+          }),
+        notify  => Docker::Run[$service_name],
+        require => File[$conf_configdir],
+      }
+
       if $db_jdbc_driver =~ /(.*\/)(.*)[-_].*\.jar/ {
         $jdbc_base_path = $1
         $jdbc_jar_file = $2
@@ -412,16 +452,34 @@ class dockerapp_wso2is (
       }
   }
 
-  $volumes = [
-    "${conf_datadir}/directory:/home/wso2carbon/wso2is-${version}/repository/data/org.wso2.carbon.directory",
-    "${conf_datadir}/database:/home/wso2carbon/wso2is-${version}/repository/database",
-    "${conf_datadir}/respository-resources-security:/home/wso2carbon/wso2is-${version}/repository/resources/security",
-    "${conf_datadir}/solr-data:/home/wso2carbon/wso2is-${version}/solr/data",
-    "${conf_configdir}:/home/wso2carbon/wso2is-${version}/repository/conf",
-    "${conf_logdir}:/home/wso2carbon/wso2is-${version}/repository/logs",
-    "${conf_libdir}/dropins:/home/wso2carbon/wso2is-${version}/repository/components/dropins",
-    "${conf_libdir}/lib:/home/wso2carbon/wso2is-${version}/repository/components/lib",
-  ]
+  if( $use_alternate_dirs == true  ){
+    $volumes = [
+      "${alternate_deployment_dir}:/home/wso2carbon/wso2is-${version}/repository/deployment",
+      "${alternate_tenants_dir}:/home/wso2carbon/wso2is-${version}/repository/tenants",
+      "${conf_datadir}/directory:/home/wso2carbon/wso2is-${version}/repository/data/org.wso2.carbon.directory",
+      "${conf_datadir}/database:/home/wso2carbon/wso2is-${version}/repository/database",
+      "${conf_datadir}/respository-resources-security:/home/wso2carbon/wso2is-${version}/repository/resources/security",
+      "${conf_datadir}/solr-data:/home/wso2carbon/wso2is-${version}/solr/data",
+      "${conf_configdir}:/home/wso2carbon/wso2is-${version}/repository/conf",
+      "${conf_logdir}:/home/wso2carbon/wso2is-${version}/repository/logs",
+      "${conf_libdir}/dropins:/home/wso2carbon/wso2is-${version}/repository/components/dropins",
+      "${conf_libdir}/lib:/home/wso2carbon/wso2is-${version}/repository/components/lib",
+    ]
+  }else{
+    $volumes = [
+      "${conf_datadir}/directory:/home/wso2carbon/wso2is-${version}/repository/data/org.wso2.carbon.directory",
+      "${conf_datadir}/database:/home/wso2carbon/wso2is-${version}/repository/database",
+      "${conf_datadir}/respository-resources-security:/home/wso2carbon/wso2is-${version}/repository/resources/security",
+      "${conf_datadir}/solr-data:/home/wso2carbon/wso2is-${version}/solr/data",
+      "${conf_configdir}:/home/wso2carbon/wso2is-${version}/repository/conf",
+      "${conf_logdir}:/home/wso2carbon/wso2is-${version}/repository/logs",
+      "${conf_libdir}/dropins:/home/wso2carbon/wso2is-${version}/repository/components/dropins",
+      "${conf_libdir}/lib:/home/wso2carbon/wso2is-${version}/repository/components/lib",
+    ]
+  }
+
+
+
 
   $envs = []
 
