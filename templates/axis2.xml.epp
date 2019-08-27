@@ -1,5 +1,6 @@
 <%- | Boolean $enable_ha, 
       String $cluster_name,
+      String $ip_address,
       Array  $ha_members,
 | -%>
 <!--
@@ -668,7 +669,7 @@
         -->
         <!-- The host name or IP address of this member -->
 
-        <parameter name="localMemberHost">172.17.0.3</parameter>
+        <parameter name="localMemberHost"><%= $ip_address -%></parameter>
 
         <!--
             The bind adress of this member. The difference between localMemberHost & localMemberBindAddress
