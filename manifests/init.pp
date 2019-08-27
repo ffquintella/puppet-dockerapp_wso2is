@@ -181,6 +181,7 @@ class dockerapp_wso2is (
   Boolean $ad_use_ssl = true,
   String $ad_service_user = '',
   String $ad_service_pwd = '',
+  String $ad_service_ccm_key = '',
   String $ad_user_search_base = '',
   String $ad_group_search_base = '',
   String $ad_user_name_search_filter = '(&amp;(objectClass=user)(sAMAccountName=?))',
@@ -404,6 +405,28 @@ class dockerapp_wso2is (
           notify  => Docker::Run[$service_name],
           require => File[$conf_configdir],
         }
+        file {"${conf_configdir}/user-mgt.xml":
+          content => epp('dockerapp_wso2is/user-mgt.xml.epp', {
+            'adm_user'                    => $adm_user,
+            'adm_pwd'                     => $adm_pwd,
+            'use_ccm'                     => $use_ccm,
+            'use_active_directory'        => $use_active_directory,
+            'ad_server'                   => $ad_server,
+            'ad_port'                     => $ad_port,
+            'ad_use_ssl'                  => $ad_use_ssl,
+            'ad_service_user'             => $ad_service_user,
+            'ad_service_pwd'              => $ad_service_pwd,
+            'ad_user_search_base'         => $ad_user_search_base,
+            'ad_group_search_base'        => $ad_group_search_base,
+            'ad_user_name_search_filter'  => $ad_user_name_search_filter,
+            'ad_user_name_list_filter'    => $ad_user_name_list_filter,
+            'ad_group_name_search_filter' => $ad_group_name_search_filter,
+            'ad_group_name_list_filter'   => $ad_group_name_list_filter,
+
+            }),
+          notify  => Docker::Run[$service_name],
+          require => File[$conf_configdir],
+        }
       }else{
         ccm_cli::scheduled { 'template-master-datasources.xml':
           template_content    => base64('encode', epp('dockerapp_wso2is/master-datasources.xml.epp',
@@ -438,30 +461,34 @@ class dockerapp_wso2is (
           environment         => $ccm_environment,
           notify              => Docker::Run[$service_name],
         }
+        ccm_cli::scheduled { 'user-mgt.xml':
+          template_content    => base64('encode', epp('dockerapp_wso2is/user-mgt.xml.epp', {
+            'adm_user'                    => $adm_user,
+            'adm_pwd'                     => $adm_pwd,
+            'use_ccm'                     => $use_ccm,
+            'use_active_directory'        => $use_active_directory,
+            'ad_server'                   => $ad_server,
+            'ad_port'                     => $ad_port,
+            'ad_use_ssl'                  => $ad_use_ssl,
+            'ad_service_user'             => $ad_service_user,
+            'ad_service_pwd'              => $ad_service_pwd,
+            'ad_user_search_base'         => $ad_user_search_base,
+            'ad_group_search_base'        => $ad_group_search_base,
+            'ad_user_name_search_filter'  => $ad_user_name_search_filter,
+            'ad_user_name_list_filter'    => $ad_user_name_list_filter,
+            'ad_group_name_search_filter' => $ad_group_name_search_filter,
+            'ad_group_name_list_filter'   => $ad_group_name_list_filter,
+            })),
+          authorization_token => $dbconn['ccm_api_key'],
+          credentials         => [$ad_service_ccm_key],
+          configurations      => [],
+          ccm_srv_record      => $ccm_srvc,
+          destination_file    => "${conf_configdir}/user-mgt.xml",
+          environment         => $ccm_environment,
+          notify              => Docker::Run[$service_name],
+        }
       }
 
-
-      file {"${conf_configdir}/user-mgt.xml":
-        content => epp('dockerapp_wso2is/user-mgt.xml.epp', {
-          'adm_user'                    => $adm_user,
-          'adm_pwd'                     => $adm_pwd,
-          'use_active_directory'        => $use_active_directory,
-          'ad_server'                   => $ad_server,
-          'ad_port'                     => $ad_port,
-          'ad_use_ssl'                  => $ad_use_ssl,
-          'ad_service_user'             => $ad_service_user,
-          'ad_service_pwd'              => $ad_service_pwd,
-          'ad_user_search_base'         => $ad_user_search_base,
-          'ad_group_search_base'        => $ad_group_search_base,
-          'ad_user_name_search_filter'  => $ad_user_name_search_filter,
-          'ad_user_name_list_filter'    => $ad_user_name_list_filter,
-          'ad_group_name_search_filter' => $ad_group_name_search_filter,
-          'ad_group_name_list_filter'   => $ad_group_name_list_filter,
-
-          }),
-        notify  => Docker::Run[$service_name],
-        require => File[$conf_configdir],
-      }
 
       file {"${conf_configdir}/axis2/axis2.xml":
         content => epp('dockerapp_wso2is/axis2.xml.epp', {

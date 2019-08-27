@@ -1,6 +1,7 @@
 <%- | String $adm_user, 
       String $adm_pwd,
       Boolean $use_active_directory = false,
+      Boolean $use_ccm = false,
       String $ad_server,
       String $ad_port,
       Boolean $ad_use_ssl = true,
@@ -60,7 +61,11 @@
             <Property name="ConnectionURL">ldap://<%= $ad_server -%>:<%= $ad_port -%></Property> 
             <% } -%>
             <Property name="ConnectionName"><%= $ad_service_user -%></Property>
+            <% if $use_ccm == false { -%>
             <Property name="ConnectionPassword"><%= $ad_service_pwd -%></Property>
+            <% } else { -%>
+            <Property name="ConnectionPassword"><%%= credential[0] %%></Property>
+            <% } -%>
             <Property name="AnonymousBind">false</Property>
             <Property name="UserSearchBase"><%= $ad_user_search_base -%></Property>
             <Property name="UserEntryObjectClass">user</Property>
