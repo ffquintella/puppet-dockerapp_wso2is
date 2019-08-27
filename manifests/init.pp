@@ -495,7 +495,7 @@ class dockerapp_wso2is (
           'enable_ha'    => $enable_ha,
           'cluster_name' => $ha_cluster_name,
           'ha_members'   => $ha_members,
-          'ip_address'   => $::ip,
+          'ip_address'   => $::fqdn,
           }),
         notify  => Docker::Run[$service_name],
         require => File[$conf_configdir],
