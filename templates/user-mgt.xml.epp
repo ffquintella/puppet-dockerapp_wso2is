@@ -1,5 +1,17 @@
 <%- | String $adm_user, 
       String $adm_pwd,
+      Boolean $use_active_directory = false,
+      String $ad_server,
+      String $ad_port,
+      Boolean $ad_use_ssl = true,
+      String $ad_service_user,
+      String $ad_service_pwd,
+      String $ad_user_search_base,
+      String $ad_group_search_base,
+      String $ad_user_name_search_filter = '(&amp;(objectClass=user)(sAMAccountName=?))',
+      String $ad_user_name_list_filter = '(&amp;(objectClass=user)(!(sn=Service)))',
+      String $ad_group_name_search_filter = '(&amp;(objectClass=group)(cn=?))',
+      String $ad_group_name_list_filter = '(objectcategory=group)',
 | -%>
 <!--
   ~ 
@@ -10,7 +22,11 @@
 <UserManager>
     <Realm>
         <Configuration>
+            <% if $use_active_directory == true { -%>
+            <AddAdmin>false</AddAdmin>
+            <% } else { -%>
             <AddAdmin>true</AddAdmin>
+            <% } -%>
             <AdminRole>admin</AdminRole>
             <AdminUser>
                 <UserName><%= $adm_user -%></UserName>
@@ -24,79 +40,8 @@
             <Property name="dataSource">jdbc/WSO2CarbonDB</Property>
         </Configuration>
 
-            <!-- Following is the configuration for internal JDBC user store. This user store manager is based on JDBC.
-                 In case if application needs to manage passwords externally set property
-                 <Property name="PasswordsExternallyManaged">true</Property>.
-                 In case if user core cache domain is needed to identify uniquely set property
-                 <Property name="UserCoreCacheIdentifier">domain</Property>.
-                 Furthermore properties, IsEmailUserName and DomainCalculation are readonly properties.
-                 Note: Do not comment within UserStoreManager tags. Cause, specific tag names are used as tokens
-                 when building configurations for products.
-            -->
-        <!--UserStoreManager class="org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager">
-            <Property name="TenantManager">org.wso2.carbon.user.core.tenant.JDBCTenantManager</Property>
-            <Property name="ReadOnly">false</Property>
-            <Property name="ReadGroups">true</Property>
-            <Property name="WriteGroups">true</Property>
-            <Property name="UsernameJavaRegEx">^[\S]{3,30}$</Property>
-            <Property name="UsernameJavaScriptRegEx">^[\S]{3,30}$</Property>
-            <Property name="UsernameJavaRegExViolationErrorMsg">Username pattern policy violated</Property>
-            <Property name="PasswordJavaRegEx">^[\S]{5,30}$</Property>
-            <Property name="PasswordJavaScriptRegEx">^[\S]{5,30}$</Property>
-            <Property name="PasswordJavaRegExViolationErrorMsg">Password length should be within 5 to 30 characters</Property>
-            <Property name="RolenameJavaRegEx">^[\S]{3,30}$</Property>
-            <Property name="RolenameJavaScriptRegEx">^[\S]{3,30}$</Property>
-            <Property name="CaseInsensitiveUsername">false</Property>
-            <Property name="SCIMEnabled">false</Property>
-            <Property name="IsBulkImportSupported">false</Property>
-            <Property name="PasswordDigest">SHA-256</Property>
-            <Property name="StoreSaltedPassword">true</Property>
-            <Property name="MultiAttributeSeparator">,</Property>
-            <Property name="MaxUserNameListLength">100</Property>
-            <Property name="MaxRoleNameListLength">100</Property>
-            <Property name="UserRolesCacheEnabled">true</Property>
-            <Property name="UserNameUniqueAcrossTenants">false</Property>
-            <Property name="LeadingOrTrailingSpaceAllowedInUserName">false</Property>
-        </UserStoreManager-->
 
-            <!-- If product is using an external LDAP as the user store in READ ONLY mode, use following user manager.
-                     In case if user core cache domain is needed to identify uniquely set property
-                     <Property name="UserCoreCacheIdentifier">domain</Property>
-            -->
-       <!--UserStoreManager class="org.wso2.carbon.user.core.ldap.ReadOnlyLDAPUserStoreManager">
-            <Property name="TenantManager">org.wso2.carbon.user.core.tenant.CommonHybridLDAPTenantManager</Property>
-            <Property name="ConnectionURL">ldap://localhost:10389</Property>
-            <Property name="ConnectionName">uid=admin,ou=system</Property>
-            <Property name="ConnectionPassword">admin</Property>
-            <Property name="AnonymousBind">false</Property>
-            <Property name="UserSearchBase">ou=system</Property>
-            <Property name="UserNameAttribute">uid</Property>
-            <Property name="UserNameSearchFilter">(&amp;(objectClass=person)(uid=?))</Property>
-            <Property name="UserNameListFilter">(&amp;(objectClass=person)(!(sn=Service)))</Property>
-            <Property name="DisplayNameAttribute"/>
-            <Property name="ReadGroups">true</Property>
-            <Property name="GroupSearchBase">ou=system</Property>
-            <Property name="GroupNameAttribute">cn</Property>
-            <Property name="GroupNameSearchFilter">(&amp;(objectClass=groupOfNames)(cn=?))</Property>
-            <Property name="GroupNameListFilter">(objectClass=groupOfNames)</Property>
-            <Property name="MembershipAttribute">member</Property>
-            <Property name="BackLinksEnabled">false</Property>
-            <Property name="UsernameJavaRegEx">[a-zA-Z0-9._\-|//]{3,30}$</Property>
-            <Property name="PasswordJavaRegEx">^[\S]{5,30}$</Property>
-            <Property name="RolenameJavaRegEx">[a-zA-Z0-9._\-|//]{3,30}$</Property>
-            <Property name="SCIMEnabled">false</Property>
-            <Property name="PasswordHashMethod">PLAIN_TEXT</Property>
-            <Property name="MultiAttributeSeparator">,</Property>
-            <Property name="MaxUserNameListLength">100</Property>
-            <Property name="MaxRoleNameListLength">100</Property>
-            <Property name="UserRolesCacheEnabled">true</Property>
-            <Property name="ConnectionPoolingEnabled">true</Property>
-            <Property name="LDAPConnectionTimeout">5000</Property>
-            <Property name="ReadTimeout"/>
-            <Property name="RetryAttempts"/>
-            <Property name="ReplaceEscapeCharactersAtUserLogin">true</Property>
-        </UserStoreManager-->
-
+<% if $use_active_directory == true { -%>
             <!-- Active directory configuration is as follows.
                  In case if user core cache domain is needed to identify uniquely set property
                  <Property name="UserCoreCacheIdentifier">domain</Property>
@@ -107,25 +52,29 @@
                  In which role is stored at user level. Depending on this value we need to change the Search Base within code.
                  isADLDSRole - (Do not comment) Set to true if connecting to an AD LDS instance else set to false.
             -->
-        <!--UserStoreManager class="org.wso2.carbon.user.core.ldap.ActiveDirectoryUserStoreManager">
+        <UserStoreManager class="org.wso2.carbon.user.core.ldap.ActiveDirectoryUserStoreManager">
             <Property name="TenantManager">org.wso2.carbon.user.core.tenant.CommonHybridLDAPTenantManager</Property>
-            <Property name="ConnectionURL">ldaps://10.100.1.100:636</Property> 
-            <Property name="ConnectionName">CN=admin,CN=Users,DC=WSO2,DC=Com</Property>
-            <Property name="ConnectionPassword">A1b2c3d4</Property>
+            <% if $ad_use_ssl == true { -%>
+            <Property name="ConnectionURL">ldaps://<%= $ad_server -%>:<%= $ad_port -%></Property> 
+            <% } else { -%>
+            <Property name="ConnectionURL">ldap://<%= $ad_server -%>:<%= $ad_port -%></Property> 
+            <% } -%>
+            <Property name="ConnectionName"><%= $ad_service_user -%></Property>
+            <Property name="ConnectionPassword"><%= $ad_service_pwd -%></Property>
             <Property name="AnonymousBind">false</Property>
-            <Property name="UserSearchBase">CN=Users,DC=WSO2,DC=Com</Property>
+            <Property name="UserSearchBase"><%= $ad_user_search_base -%></Property>
             <Property name="UserEntryObjectClass">user</Property>
-            <Property name="UserNameAttribute">cn</Property>
-            <Property name="UserNameSearchFilter">(&amp;(objectClass=user)(cn=?))</Property>
-            <Property name="UserNameListFilter">(&amp;(objectClass=user)(!(sn=Service)))</Property>
+            <Property name="UserNameAttribute">sAMAccountName</Property>
+            <Property name="UserNameSearchFilter"><%= $ad_user_name_search_filter -%></Property>
+            <Property name="UserNameListFilter"><%= $ad_user_name_list_filter -%></Property>
             <Property name="DisplayNameAttribute"/>
             <Property name="ReadGroups">true</Property>
             <Property name="WriteGroups">true</Property>
-            <Property name="GroupSearchBase">CN=Users,DC=WSO2,DC=Com</Property>
+            <Property name="GroupSearchBase"><%= $ad_group_search_base -%></Property>
             <Property name="GroupEntryObjectClass">group</Property>
             <Property name="GroupNameAttribute">cn</Property>
-            <Property name="GroupNameSearchFilter">(&amp;(objectClass=group)(cn=?))</Property>
-            <Property name="GroupNameListFilter">(objectcategory=group)</Property>
+            <Property name="GroupNameSearchFilter"><%= $ad_group_name_search_filter -%></Property>
+            <Property name="GroupNameListFilter"><%= $ad_group_name_list_filter -%></Property>
             <Property name="MembershipAttribute">member</Property>
             <Property name="MemberOfAttribute">memberOf</Property>
             <Property name="BackLinksEnabled">true</Property>
@@ -156,65 +105,18 @@
             <Property name="ReadTimeout"/>
             <Property name="RetryAttempts"/>
             <Property name="StartTLSEnabled">false</Property>
-        </UserStoreManager-->
-
-        <!-- Following user manager is used by Identity Server (IS) as its default user manager.
-             IS will do token replacement when building the product. Therefore do not change the syntax.
-             If "kdcEnabled" parameter is true, IS will allow service principle management.
-             Thus "ServicePasswordJavaRegEx", "ServiceNameJavaRegEx" properties control the service name format and
-             service password formats. In case if user core cache domain is needed to identify uniquely set property
-             <Property name="UserCoreCacheIdentifier">domain</Property>
-        -->
-        <UserStoreManager class="org.wso2.carbon.user.core.ldap.ReadWriteLDAPUserStoreManager">
-            <Property name="TenantManager">org.wso2.carbon.user.core.tenant.CommonHybridLDAPTenantManager</Property>
-            <Property name="ConnectionURL">ldap://localhost:${Ports.EmbeddedLDAP.LDAPServerPort}</Property>
-            <Property name="ConnectionName">uid=admin,ou=system</Property>
-            <Property name="ConnectionPassword">admin</Property>
-            <Property name="AnonymousBind">false</Property>
-            <Property name="UserSearchBase">ou=Users,dc=wso2,dc=org</Property>
-            <Property name="UserEntryObjectClass">identityPerson</Property>
-            <Property name="UserNameAttribute">uid</Property>
-            <Property name="UserNameSearchFilter">(&amp;(objectClass=person)(uid=?))</Property>
-            <Property name="UserNameListFilter">(&amp;(objectClass=person)(!(sn=Service)))</Property>
-            <Property name="DisplayNameAttribute"/>
-            <Property name="ReadGroups">true</Property>
-            <Property name="WriteGroups">true</Property>
-            <Property name="GroupSearchBase">ou=Groups,dc=wso2,dc=org</Property>
-            <Property name="GroupEntryObjectClass">groupOfNames</Property>
-            <Property name="GroupNameAttribute">cn</Property>
-            <Property name="GroupNameSearchFilter">(&amp;(objectClass=groupOfNames)(cn=?))</Property>
-            <Property name="GroupNameListFilter">(objectClass=groupOfNames)</Property>
-            <Property name="MembershipAttribute">member</Property>
-            <Property name="BackLinksEnabled">false</Property>
-            <Property name="UsernameJavaRegEx">[a-zA-Z0-9._\-|//]{3,30}$</Property>
-            <Property name="UsernameJavaScriptRegEx">^[\S]{3,30}$</Property>
-            <Property name="UsernameJavaRegExViolationErrorMsg">Username pattern policy violated</Property>
-            <Property name="PasswordJavaRegEx">^[\S]{5,30}$</Property>
-            <Property name="PasswordJavaScriptRegEx">^[\S]{5,30}$</Property>
-            <Property name="PasswordJavaRegExViolationErrorMsg">Password length should be within 5 to 30 characters</Property>
-            <Property name="RolenameJavaRegEx">[a-zA-Z0-9._\-|//]{3,30}$</Property>
-            <Property name="RolenameJavaScriptRegEx">^[\S]{3,30}$</Property>
-            <Property name="SCIMEnabled">true</Property>
-            <Property name="IsBulkImportSupported">false</Property>
-            <Property name="EmptyRolesAllowed">true</Property>
-            <Property name="PasswordHashMethod">PLAIN_TEXT</Property>
-            <Property name="MultiAttributeSeparator">,</Property>
-            <Property name="MaxUserNameListLength">100</Property>
-            <Property name="MaxRoleNameListLength">100</Property>
-            <Property name="kdcEnabled">false</Property>
-            <Property name="defaultRealmName">WSO2.ORG</Property>
-            <Property name="UserRolesCacheEnabled">true</Property>
-            <Property name="ConnectionPoolingEnabled">false</Property>
-            <Property name="LDAPConnectionTimeout">5000</Property>
-            <Property name="ReadTimeout"/>
-            <Property name="RetryAttempts"/>
-            <Property name="StartTLSEnabled">false</Property>
         </UserStoreManager>
+<% } -%>
+     
 
         <AuthorizationManager class="org.wso2.carbon.user.core.authorization.JDBCAuthorizationManager">
             <Property name="AdminRoleManagementPermissions">/permission</Property>
             <Property name="AuthorizationCacheEnabled">true</Property>
+            <% if $use_active_directory == true { -%>
+            <Property name="GetAllRolesOfUserEnabled">true</Property>
+            <% } else { -%>
             <Property name="GetAllRolesOfUserEnabled">false</Property>
+            <% } -%>
         </AuthorizationManager>
     </Realm>
 </UserManager>

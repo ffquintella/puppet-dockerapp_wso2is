@@ -104,6 +104,42 @@
 # @param [Boolean] use_alternate_dirs 
 #   Enable or disable the use of alternate dirs
 #
+# @param [Boolean] use_active_directory 
+#   If we are using Active Directory as our primary user store
+#
+# @param [String] ad_server 
+#   The active directory server (PDC is prefered)
+#
+# @param [String] ad_port 
+#   The active directory port (636)
+#
+# @param [Boolean] ad_use_ssl 
+#   If the connection to active directory uses ssl
+#
+# @param [String] ad_service_user 
+#   The CN of the active directory service user
+#
+# @param [String] ad_service_pwd 
+#   The password of the active directory service user 
+#
+# @param [String] ad_user_search_base 
+#   The base OU to search the users
+#
+# @param [String] ad_group_search_base 
+#   The base OU to search the groups 
+#
+# @param [String] ad_user_name_search_filter 
+#   The search filter for users on AD
+#
+# @param [String] ad_user_name_list_filter 
+#   The list filter for users on AD
+#
+# @param [String] ad_group_name_search_filter 
+#   The search filter for groups on AD
+#
+# @param [String] ad_group_name_list_filter 
+#   The list filter for groups on AD
+#
 class dockerapp_wso2is (
   String $service_name = 'wso2is',
   String $version = '5.8.0',
@@ -138,7 +174,19 @@ class dockerapp_wso2is (
   String $is_fqdn = $fqdn,
   String $alternate_deployment_dir = '',
   String $alternate_tenants_dir = '',
-  Boolean $use_alternate_dirs = false
+  Boolean $use_alternate_dirs = false,
+  Boolean $use_active_directory = false,
+  String $ad_server = '',
+  String $ad_port = '636',
+  Boolean $ad_use_ssl = true,
+  String $ad_service_user = '',
+  String $ad_service_pwd = '',
+  String $ad_user_search_base = '',
+  String $ad_group_search_base = '',
+  String $ad_user_name_search_filter = '(&amp;(objectClass=user)(sAMAccountName=?))',
+  String $ad_user_name_list_filter = '(&amp;(objectClass=user)(!(sn=Service)))',
+  String $ad_group_name_search_filter = '(&amp;(objectClass=group)(cn=?))',
+  String $ad_group_name_list_filter = '(objectcategory=group)',
 ){
 
   include 'dockerapp'
@@ -395,8 +443,21 @@ class dockerapp_wso2is (
 
       file {"${conf_configdir}/user-mgt.xml":
         content => epp('dockerapp_wso2is/user-mgt.xml.epp', {
-          'adm_user' => $adm_user,
-          'adm_pwd'  => $adm_pwd,
+          'adm_user'                    => $adm_user,
+          'adm_pwd'                     => $adm_pwd,
+          'use_active_directory'        => $use_active_directory,
+          'ad_server'                   => $ad_server,
+          'ad_port'                     => $ad_port,
+          'ad_use_ssl'                  => $ad_use_ssl,
+          'ad_service_user'             => $ad_service_user,
+          'ad_service_pwd'              => $ad_service_pwd,
+          'ad_user_search_base'         => $ad_user_search_base,
+          'ad_group_search_base'        => $ad_group_search_base,
+          'ad_user_name_search_filter'  => $ad_user_name_search_filter,
+          'ad_user_name_list_filter'    => $ad_user_name_list_filter,
+          'ad_group_name_search_filter' => $ad_group_name_search_filter,
+          'ad_group_name_list_filter'   => $ad_group_name_list_filter,
+
           }),
         notify  => Docker::Run[$service_name],
         require => File[$conf_configdir],
