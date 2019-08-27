@@ -497,6 +497,7 @@ class dockerapp_wso2is (
           'ha_members'   => $ha_members,
           'ip_address'   => $::fqdn,
           }),
+        replace => false,
         notify  => Docker::Run[$service_name],
         require => File[$conf_configdir],
       }
