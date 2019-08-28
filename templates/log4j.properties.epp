@@ -32,7 +32,7 @@ log4j.logger.org.apache.commons.httpclient=ERROR
 log4j.logger.org.apache.coyote=WARN
 log4j.logger.org.apache.solr=ERROR
 log4j.logger.me.prettyprint.cassandra.hector.TimingLogger=ERROR
-log4j.logger.org.wso2=<%= $master_log_level -%>
+log4j.logger.org.wso2=<%= $master_log_level %>
 log4j.logger.org.apache.axis2.enterprise=FATAL, CARBON_LOGFILE, CARBON_MEMORY
 log4j.logger.org.apache.directory.shared.ldap=WARN, CARBON_LOGFILE, CARBON_MEMORY
 log4j.logger.org.apache.directory.server.ldap.handlers=WARN, CARBON_LOGFILE, CARBON_MEMORY
