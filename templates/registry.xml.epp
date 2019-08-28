@@ -1,4 +1,5 @@
 <%- | 
+      Hash $db_conn,
       Boolean $use_ha = false,
 | -%>
 <wso2registry>
@@ -16,20 +17,23 @@
   <dbConfig name="wso2registry">
       <dataSource>jdbc/WSO2CarbonDB</dataSource>
   </dbConfig>
+  <dbConfig name="sharedregistry">
+      <dataSource>jdbc/WSO2CarbonDB</dataSource>
+  </dbConfig>
   <remoteInstance url="https://localhost:9443/registry">
-      <id>wso2registry</id>
-      <dbConfig>wso2registry</dbConfig>
+      <id>sharedregistry</id>
+      <dbConfig>sharedregistry</dbConfig>
       <readOnly>false</readOnly>
       <registryRoot>/</registryRoot>
       <enableCache>true</enableCache>
-      <cacheId>jdbc/WSO2CarbonDB</cacheId>
+      <cacheId>jdbc:sqlserver://<%= $db_conn['db_hostname'] -%>:<%= $db_conn['db_port'] -%>;databaseName=<%= $db_conn['db_name'] -%>;SendStringParametersAsUnicode=false</cacheId>
   </remoteInstance>
   <mount path="/_system/config" overwrite="true">
-      <instanceId>wso2registry</instanceId>
+      <instanceId>sharedregistry</instanceId>
       <targetPath>/_system/config</targetPath>
   </mount>
   <mount path="/_system/governance" overwrite="true">
-      <instanceId>wso2registry</instanceId>
+      <instanceId>sharedregistry</instanceId>
       <targetPath>/_system/governance</targetPath>
   </mount>
 <% } -%>

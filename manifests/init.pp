@@ -539,7 +539,8 @@ class dockerapp_wso2is (
 
       file {"${conf_configdir}/registry.xml":
         content => epp('dockerapp_wso2is/registry.xml.epp', {
-          'use_ha' => $enable_ha,
+          'use_ha'  => $enable_ha,
+          'db_conn' => $dbconn,
           }),
         notify  => Docker::Run[$service_name],
         require => File[$conf_configdir],
