@@ -564,6 +564,12 @@ class dockerapp_wso2is (
         require => File[$conf_configdir],
       }
 
+      file {"${conf_configdir}/tomcat/catalina-server.xml":
+        content => epp('dockerapp_wso2is/catalina-server.xml.epp'),
+        notify  => Docker::Run[$service_name],
+        require => File[$conf_configdir],
+      }
+
       file {"${conf_configdir}/log4j.properties":
         content => epp('dockerapp_wso2is/log4j.properties.epp', {
           'master_log_level'         => $master_log_level,
