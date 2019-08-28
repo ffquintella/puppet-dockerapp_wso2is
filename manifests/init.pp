@@ -140,6 +140,15 @@
 # @param [String] ad_group_name_list_filter 
 #   The list filter for groups on AD
 #
+# @param [String] master_log_level 
+#   The wso2 master log level default = INFO
+#
+# @param [String] authentication_log_level 
+#   The wso2 authentication log level default = INFO
+#
+# @param [String] identity_log_level 
+#   The wso2 identity log level default = INFO
+#
 class dockerapp_wso2is (
   String $service_name = 'wso2is',
   String $version = '5.8.0',
@@ -188,6 +197,9 @@ class dockerapp_wso2is (
   String $ad_user_name_list_filter = '(&amp;(objectClass=user)(!(sn=Service)))',
   String $ad_group_name_search_filter = '(&amp;(objectClass=group)(cn=?))',
   String $ad_group_name_list_filter = '(objectcategory=group)',
+  String $master_log_level = 'INFO',
+  String $authentication_log_level = 'INFO',
+  String $identity_log_level = 'INFO',
 ){
 
   include 'dockerapp'
@@ -506,6 +518,24 @@ class dockerapp_wso2is (
         content => epp('dockerapp_wso2is/carbon.xml.epp', {
           'is_fqdn' => $is_fqdn,
           'version' => $version
+          }),
+        notify  => Docker::Run[$service_name],
+        require => File[$conf_configdir],
+      }
+
+      file {"${conf_configdir}/identity/embedded-ldap.xml":
+        content => epp('dockerapp_wso2is/embedded-ldap.xml.epp', {
+          'enable_ldap' => !$use_active_directory,
+          }),
+        notify  => Docker::Run[$service_name],
+        require => File[$conf_configdir],
+      }
+
+      file {"${conf_configdir}/log4j.properties":
+        content => epp('dockerapp_wso2is/log4j.properties.epp', {
+          'master_log_level'         => $master_log_level,
+          'authentication_log_level' => $authentication_log_level,
+          'identity_log_level'       => $identity_log_level,
           }),
         notify  => Docker::Run[$service_name],
         require => File[$conf_configdir],

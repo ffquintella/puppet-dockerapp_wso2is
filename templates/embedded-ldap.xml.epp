@@ -1,0 +1,60 @@
+<%- | 
+      Boolean $enable_ldap
+| -%>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<EmbeddedLDAPConfig>
+
+  <EmbeddedLDAP>
+    <% if $enable_ldap { -%>
+    <Property name="enable">true</Property>
+    <% } else { -%>
+    <Property name="enable">false</Property>
+    <% } -%>
+    <Property name="port">${Ports.EmbeddedLDAP.LDAPServerPort}</Property>
+    <Property name="instanceId">default</Property>
+    <Property name="connectionPassword">admin</Property>
+    <Property name="workingDirectory">.</Property>
+    <Property name="AdminEntryObjectClass">identityPerson</Property>
+    <Property name="allowAnonymousAccess">false</Property>
+    <Property name="accessControlEnabled">true</Property>
+    <Property name="denormalizeOpAttrsEnabled">false</Property>
+    <Property name="maxPDUSize">2000000</Property>
+    <Property name="saslHostName">localhost</Property>
+    <Property name="saslPrincipalName">ldap/localhost@EXAMPLE.COM</Property>
+  </EmbeddedLDAP>
+
+    <DefaultPartition>
+    <Property name="id">root</Property>
+    <Property name="realm">WSO2.ORG</Property>
+    <Property name="kdcPassword">secret</Property>
+    <Property name="ldapServerPrinciplePassword">randall</Property>
+  </DefaultPartition>
+
+    <PartitionAdmin>
+    <Property name="uid">admin</Property>
+    <Property name="firstName">admin</Property>
+    <Property name="lastName">admin</Property>
+    <Property name="email">admin@wso2.com</Property>
+    <Property name="password">admin</Property>
+    <Property name="passwordType">SHA</Property>
+  </PartitionAdmin>
+
+  <PartitionAdminGroup>
+    <Property name="adminRoleName">admin</Property>
+    <Property name="groupNameAttribute">cn</Property>
+    <Property name="memberNameAttribute">member</Property>
+  </PartitionAdminGroup>
+
+    <KDCServer>
+    <Property name="name">defaultKDC</Property>
+    <Property name="enabled">false</Property>
+    <Property name="protocol">UDP</Property>
+    <Property name="host">localhost</Property>
+    <Property name="port">${Ports.EmbeddedLDAP.KDCServerPort}</Property>
+    <Property name="maximumTicketLifeTime">8640000</Property>
+    <Property name="maximumRenewableLifeTime">604800000</Property>
+    <Property name="preAuthenticationTimeStampEnabled">true</Property>
+  </KDCServer>
+
+</EmbeddedLDAPConfig>
