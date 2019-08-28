@@ -63,22 +63,22 @@ log4j.logger.net.sf.ehcache=ERROR
 log4j.logger.org.springframework=WARN
 log4j.logger.org.opensaml.xml.security.credential.criteria=WARN
 
-log4j.logger.org.wso2.carbon.user.core=<%= $authentication_log_level -%>
-log4j.logger.org.wso2.carbon.identity=<%= $identity_log_level -%>
-log4j.logger.org.wso2.carbon.identity.sso.saml=<%= $identity_log_level -%>
-log4j.logger.org.wso2.carbon.identity.application=<%= $identity_log_level -%>
-log4j.logger.org.wso2.carbon.identity.application.authentication.framework=<%= $identity_log_level -%>
-log4j.logger.org.wso2.carbon.identity.mgt=<%= $identity_log_level -%>
-log4j.logger.org.wso2.carbon.identity.oauth2=<%= $identity_log_level -%>
-log4j.logger.org.wso2.carbon.identity.scim=<%= $identity_log_level -%>
-log4j.logger.org.wso2.carbon.identity.mgt=<%= $identity_log_level -%>
-log4j.logger.org.wso2.carbon.idp.mgt=<%= $identity_log_level -%>
-log4j.logger.org.wso2.carbon.identity.provisioning=<%= $identity_log_level -%>
-log4j.logger.org.wso2.carbon.identity.user.account.association=<%= $identity_log_level -%>
-log4j.logger.org.wso2.carbon.identity.user.profile.mgt=<%= $identity_log_level -%>
-log4j.logger.org.wso2.carbon.security=<%= $identity_log_level -%>
-log4j.logger.org.wso2.carbon.identity.sso.agent=<%= $identity_log_level -%>
-log4j.logger.org.wso2.carbon.identity.core=<%= $identity_log_level -%>
+log4j.logger.org.wso2.carbon.user.core=<%= $authentication_log_level %>
+log4j.logger.org.wso2.carbon.identity=<%= $identity_log_level %>
+log4j.logger.org.wso2.carbon.identity.sso.saml=<%= $identity_log_level %>
+log4j.logger.org.wso2.carbon.identity.application=<%= $identity_log_level %>
+log4j.logger.org.wso2.carbon.identity.application.authentication.framework=<%= $identity_log_level %>
+log4j.logger.org.wso2.carbon.identity.mgt=<%= $identity_log_level %>
+log4j.logger.org.wso2.carbon.identity.oauth2=<%= $identity_log_level %>
+log4j.logger.org.wso2.carbon.identity.scim=<%= $identity_log_level %>
+log4j.logger.org.wso2.carbon.identity.mgt=<%= $identity_log_level %>
+log4j.logger.org.wso2.carbon.idp.mgt=<%= $identity_log_level %>
+log4j.logger.org.wso2.carbon.identity.provisioning=<%= $identity_log_level %>
+log4j.logger.org.wso2.carbon.identity.user.account.association=<%= $identity_log_level %>
+log4j.logger.org.wso2.carbon.identity.user.profile.mgt=<%= $identity_log_level %>
+log4j.logger.org.wso2.carbon.security=<%= $identity_log_level %>
+log4j.logger.org.wso2.carbon.identity.sso.agent=<%= $identity_log_level %>
+log4j.logger.org.wso2.carbon.identity.core=<%= $identity_log_level %>
 
 log4j.logger.trace.messages=TRACE,CARBON_TRACE_LOGFILE
 
