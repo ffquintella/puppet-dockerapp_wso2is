@@ -1,5 +1,6 @@
 <%- | String $adm_user, 
       String $adm_pwd,
+      String $adm_role, 
       Boolean $use_active_directory = false,
       Boolean $use_ccm = false,
       String $ad_server,
@@ -28,7 +29,7 @@
             <% } else { -%>
             <AddAdmin>true</AddAdmin>
             <% } -%>
-            <AdminRole>admin</AdminRole>
+            <AdminRole><%= $adm_role -%></AdminRole>
             <AdminUser>
                 <UserName><%= $adm_user -%></UserName>
                 <Password><%= $adm_pwd -%></Password>

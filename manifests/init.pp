@@ -77,6 +77,9 @@
 # @param [String] adm_pwd 
 #   The initial system admin account password 
 #
+# @param [String] adm_role 
+#   The initial system admin role  
+#
 # @param [Boolean] use_external_auth_app 
 #   If wso2is should use an external auth app to display the login page
 #
@@ -173,6 +176,7 @@ class dockerapp_wso2is (
   String $db_db_user_pwd_ccm_key = '',
   String $adm_user = 'admin',
   String $adm_pwd = 'secret',
+  String $adm_role = 'wso2isadmin',
   Boolean $use_external_auth_app = false,
   String $external_auth_endpoint = '',
   String $external_auth_endpoint_retry = '',
@@ -421,6 +425,7 @@ class dockerapp_wso2is (
           content => epp('dockerapp_wso2is/user-mgt.xml.epp', {
             'adm_user'                    => $adm_user,
             'adm_pwd'                     => $adm_pwd,
+            'adm_role'                    => $adm_role,
             'use_ccm'                     => $use_ccm,
             'use_active_directory'        => $use_active_directory,
             'ad_server'                   => $ad_server,
@@ -477,6 +482,7 @@ class dockerapp_wso2is (
           template_content    => base64('encode', epp('dockerapp_wso2is/user-mgt.xml.epp', {
             'adm_user'                    => $adm_user,
             'adm_pwd'                     => $adm_pwd,
+            'adm_role'                    => $adm_role,
             'use_ccm'                     => $use_ccm,
             'use_active_directory'        => $use_active_directory,
             'ad_server'                   => $ad_server,
