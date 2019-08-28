@@ -152,6 +152,15 @@
 # @param [String] identity_log_level 
 #   The wso2 identity log level default = INFO
 #
+# @param [String] pwd_java_regex 
+#   The java regex to validate passwords
+#
+# @param [String] pwd_java_script_regex 
+#   The java script regex to validate passwords
+#
+# @param [String] pwd_violation_msg 
+#   The error message to be shown when the validaton fails
+#
 class dockerapp_wso2is (
   String $service_name = 'wso2is',
   String $version = '5.8.0',
@@ -204,6 +213,9 @@ class dockerapp_wso2is (
   String $master_log_level = 'INFO',
   String $authentication_log_level = 'INFO',
   String $identity_log_level = 'INFO',
+  String $pwd_java_regex = '[a-zA-Z0-9._\-|//]{3,30}$',
+  String $pwd_java_script_regex = '^[\S]{5,30}$',
+  String $pwd_violation_msg = 'Password length should be within 5 to 30 characters',
 ){
 
   include 'dockerapp'
@@ -439,6 +451,9 @@ class dockerapp_wso2is (
             'ad_user_name_list_filter'    => $ad_user_name_list_filter,
             'ad_group_name_search_filter' => $ad_group_name_search_filter,
             'ad_group_name_list_filter'   => $ad_group_name_list_filter,
+            'pwd_java_regex'              => $pwd_java_regex,
+            'pwd_java_script_regex'       => $pwd_java_script_regex,
+            'pwd_violation_msg'           => $pwd_violation_msg,
 
             }),
           notify  => Docker::Run[$service_name],
@@ -496,6 +511,9 @@ class dockerapp_wso2is (
             'ad_user_name_list_filter'    => $ad_user_name_list_filter,
             'ad_group_name_search_filter' => $ad_group_name_search_filter,
             'ad_group_name_list_filter'   => $ad_group_name_list_filter,
+            'pwd_java_regex'              => $pwd_java_regex,
+            'pwd_java_script_regex'       => $pwd_java_script_regex,
+            'pwd_violation_msg'           => $pwd_violation_msg,
             })),
           authorization_token => $dbconn['ccm_api_key'],
           credentials         => [$ad_service_ccm_key],
