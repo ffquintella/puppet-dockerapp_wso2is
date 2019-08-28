@@ -537,6 +537,14 @@ class dockerapp_wso2is (
         require => File[$conf_configdir],
       }
 
+      file {"${conf_configdir}/registry.xml":
+        content => epp('dockerapp_wso2is/registry.xml.epp', {
+          'use_ha' => $enable_ha,
+          }),
+        notify  => Docker::Run[$service_name],
+        require => File[$conf_configdir],
+      }
+
       file {"${conf_configdir}/log4j.properties":
         content => epp('dockerapp_wso2is/log4j.properties.epp', {
           'master_log_level'         => $master_log_level,
