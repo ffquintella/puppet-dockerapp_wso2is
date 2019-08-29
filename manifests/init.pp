@@ -273,7 +273,7 @@ class dockerapp_wso2is (
     group  => $dir_group,
   }
 
-  file{ "${conf_datadir}/respository-resources-security":
+  file{ "${conf_datadir}/repository-resources-security":
     ensure => directory,
     owner  => $dir_owner,
     group  => $dir_group,
@@ -298,9 +298,9 @@ class dockerapp_wso2is (
   }
 
   exec { "${service_name}-copy-security":
-    command => "/usr/bin/docker run --rm --name=${service_name}_cp_dropins -v ${conf_datadir}/respository-resources-security:/conf_dest --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/resources/security/* /conf_dest\"",
-    creates => "${conf_datadir}/respository-resources-security/wso2carbon.jks",
-    require => File["${conf_datadir}/respository-resources-security"],
+    command => "/usr/bin/docker run --rm --name=${service_name}_cp_dropins -v ${conf_datadir}/repository-resources-security:/conf_dest --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/resources/security/* /conf_dest\"",
+    creates => "${conf_datadir}/repository-resources-security/wso2carbon.jks",
+    require => File["${conf_datadir}/repository-resources-security"],
   }
 
   $dropins.each |String $dropin| {
@@ -618,7 +618,7 @@ class dockerapp_wso2is (
       "${alternate_tenants_dir}:/home/wso2carbon/wso2is-${version}/repository/tenants",
       "${conf_datadir}/directory:/home/wso2carbon/wso2is-${version}/repository/data/org.wso2.carbon.directory",
       "${conf_datadir}/database:/home/wso2carbon/wso2is-${version}/repository/database",
-      "${conf_datadir}/respository-resources-security:/home/wso2carbon/wso2is-${version}/repository/resources/security",
+      "${conf_datadir}/repository-resources-security:/home/wso2carbon/wso2is-${version}/repository/resources/security",
       "${conf_datadir}/solr-data:/home/wso2carbon/wso2is-${version}/solr/data",
       "${conf_configdir}:/home/wso2carbon/wso2is-${version}/repository/conf",
       "${conf_logdir}:/home/wso2carbon/wso2is-${version}/repository/logs",
@@ -629,7 +629,7 @@ class dockerapp_wso2is (
     $volumes = [
       "${conf_datadir}/directory:/home/wso2carbon/wso2is-${version}/repository/data/org.wso2.carbon.directory",
       "${conf_datadir}/database:/home/wso2carbon/wso2is-${version}/repository/database",
-      "${conf_datadir}/respository-resources-security:/home/wso2carbon/wso2is-${version}/repository/resources/security",
+      "${conf_datadir}/repository-resources-security:/home/wso2carbon/wso2is-${version}/repository/resources/security",
       "${conf_datadir}/solr-data:/home/wso2carbon/wso2is-${version}/solr/data",
       "${conf_configdir}:/home/wso2carbon/wso2is-${version}/repository/conf",
       "${conf_logdir}:/home/wso2carbon/wso2is-${version}/repository/logs",
