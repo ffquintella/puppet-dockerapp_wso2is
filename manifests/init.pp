@@ -161,6 +161,9 @@
 # @param [String] pwd_violation_msg 
 #   The error message to be shown when the validaton fails
 #
+# @param [Array] extra_trust_certs 
+#   Extra certificates urls to download and trust
+#
 class dockerapp_wso2is (
   String $service_name = 'wso2is',
   String $version = '5.8.0',
@@ -216,6 +219,7 @@ class dockerapp_wso2is (
   String $pwd_java_regex = '[a-zA-Z0-9._\-|//]{3,30}$',
   String $pwd_java_script_regex = '^[\S]{5,30}$',
   String $pwd_violation_msg = 'Password length should be within 5 to 30 characters',
+  Array $extra_trust_certs = [],
 ){
 
   include 'dockerapp'
@@ -256,6 +260,12 @@ class dockerapp_wso2is (
   }
 
   file{ "${conf_datadir}/solr-data":
+    ensure => directory,
+    owner  => $dir_owner,
+    group  => $dir_group,
+  }
+  
+  file{ "${conf_datadir}/certs":
     ensure => directory,
     owner  => $dir_owner,
     group  => $dir_group,
@@ -316,6 +326,21 @@ class dockerapp_wso2is (
         group       => $dir_group,
         notify      => Docker::Run[$service_name],
         require     => File["${conf_libdir}/dropins"],
+      }
+    }
+  }
+
+  $extra_trust_certs.each |String $cert| {
+    if $cert=~ /(.*\/)(.*)[-_].*\.crt/ {
+      $cert_base_path = $1
+      $cert_file = $2
+
+      remote_file { "${conf_datadir}/certs/${cert_file}":
+        ensure      => present,
+        source      => $cert,
+        verify_peer => false,
+        notify      => Docker::Run[$service_name],
+        require     => File["${conf_datadir}/certs"],
       }
     }
   }

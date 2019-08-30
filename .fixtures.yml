@@ -5,6 +5,7 @@ fixtures:
   forge_modules:
      stdlib: "puppetlabs/stdlib"
      docker: "puppetlabs/docker"
+     java_ks: "puppetlabs/java_ks"
      yumrepo: "puppetlabs/yumrepo_core"
      dockerapp: "ffquintella/dockerapp"
      ccm_cli: "ffquintella/ccm_cli"
