@@ -264,7 +264,7 @@ class dockerapp_wso2is (
     owner  => $dir_owner,
     group  => $dir_group,
   }
-  
+
   file{ "${conf_datadir}/certs":
     ensure => directory,
     owner  => $dir_owner,
@@ -330,6 +330,12 @@ class dockerapp_wso2is (
     }
   }
 
+  if !defined( Class['java'] ) {
+    class { 'java':
+      distribution => 'jre',
+    }
+  }
+
   $extra_trust_certs.each |String $cert| {
     if $cert=~ /(.*\/)(.*).crt/ {
       $cert_base_path = $1
@@ -349,6 +355,7 @@ class dockerapp_wso2is (
         target       => "${conf_datadir}/repository-resources-security/client-truststore.jks",
         password     => 'wso2carbon',
         trustcacerts => true,
+        require      => Class['java'],
       }
     }
   }
