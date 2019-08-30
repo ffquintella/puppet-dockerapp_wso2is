@@ -342,6 +342,14 @@ class dockerapp_wso2is (
         notify      => Docker::Run[$service_name],
         require     => File["${conf_datadir}/certs"],
       }
+
+      java_ks { "wso2:truststore-${cert_file}":
+        ensure       => latest,
+        certificate  => "${conf_datadir}/certs/${cert_file}.crt",
+        target       => "${conf_datadir}/repository-resources-security/client-truststore.jks",
+        password     => 'wso2carbon',
+        trustcacerts => true,
+      }
     }
   }
 
