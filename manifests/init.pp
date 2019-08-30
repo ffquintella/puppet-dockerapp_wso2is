@@ -331,11 +331,11 @@ class dockerapp_wso2is (
   }
 
   $extra_trust_certs.each |String $cert| {
-    if $cert=~ /(.*\/)(.*)[-_].*\.crt/ {
+    if $cert=~ /(.*\/)(.*).crt/ {
       $cert_base_path = $1
       $cert_file = $2
 
-      remote_file { "${conf_datadir}/certs/${cert_file}":
+      remote_file { "${conf_datadir}/certs/${cert_file}.crt":
         ensure      => present,
         source      => $cert,
         verify_peer => false,
