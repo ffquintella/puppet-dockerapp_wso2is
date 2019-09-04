@@ -595,9 +595,12 @@ class dockerapp_wso2is (
         require => File[$conf_configdir],
       }
 
-      if $use_active_directory {
+      if $use_active_directory == true {
         file {"${conf_configdir}/identity/service-providers/sp_dashboard.xml":
-          source => 'puppet:///modules/dockerapp_wso2is/sp_dashboard_ad.xml';
+          ensure => file,
+          source => 'puppet:///modules/dockerapp_wso2is/sp_dashboard_ad.xml',
+          owner  => $dir_owner,
+          group  => $dir_group,
         }
       }
 

@@ -24,7 +24,7 @@ The advantage of this strucure is standarization between your apps and security.
 ## Setup
 
 
-### Setup Requirements **OPTIONAL**
+### Setup Requirements 
 
 This module depends of the following other modules:
 
@@ -32,6 +32,9 @@ This module depends of the following other modules:
 * puppetlabs-stdblib
 * lwf-remote_file
 * ffquintella-sqlcli 
+* puppetlabs-java
+* puppetlabs-docker
+* ffquintella-ccm_cli
 
 ## Usage
 

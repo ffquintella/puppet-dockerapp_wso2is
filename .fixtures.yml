@@ -10,6 +10,7 @@ fixtures:
      dockerapp: "ffquintella/dockerapp"
      ccm_cli: "ffquintella/ccm_cli"
      cron: "puppetlabs/cron_core"
+     java: "puppetlabs/java"
      sqlcli: 
        repo: "ffquintella/sqlcli"
        ref: "1.0.6"

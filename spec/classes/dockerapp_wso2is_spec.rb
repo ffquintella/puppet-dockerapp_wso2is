@@ -32,7 +32,6 @@ describe 'dockerapp_wso2is' do
       it { is_expected.to contain_file('/srv/application-data/wso2_test') }
       it { is_expected.to contain_file('/srv/application-data/wso2_test/db-scripts') }
       it { is_expected.to contain_file('/srv/application-data/wso2_test/solr-data') }
-      it { is_expected.to contain_file('/srv/application-data/wso2_test/respository-resources-security') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test/datasources/master-datasources.xml') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test/datasources/metrics-datasources.xml') }
@@ -46,9 +45,8 @@ describe 'dockerapp_wso2is' do
       it { is_expected.to contain_file('/srv/application-lib/wso2_test/lib') }
       it { is_expected.to contain_file('/srv/application-log/wso2_test') }
       it { is_expected.to contain_file('/srv/scripts/wso2_test') }
-      
     end
-    context "ccm_client" do
+    context 'ccm_client' do
       let(:facts) { os_facts }
 
       let(:params) do
@@ -75,17 +73,13 @@ describe 'dockerapp_wso2is' do
       it { is_expected.to contain_class('dockerapp') }
       it { is_expected.to contain_class('docker') }
       it { is_expected.to contain_class('sqlcli') }
-      it { is_expected.to contain_class('ccm_cli::api') }    
+      it { is_expected.to contain_class('ccm_cli::api') }
       it { is_expected.to contain_file('/srv/application-data/wso2_test') }
-      it { is_expected.to contain_file('/srv/application-data/wso2_test/db-scripts') }
-      it { is_expected.to contain_file('/srv/application-data/wso2_test/solr-data') }
-      it { is_expected.to contain_file('/srv/application-data/wso2_test/respository-resources-security') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test') }
       it { is_expected.to contain_ccm_cli__scheduled('template-master-datasources.xml') }
       it { is_expected.to contain_ccm_cli__scheduled('template-metrics-datasources.xml') }
       it { is_expected.to contain_ccm_cli__scheduled('template-bps-datasources.xml') }
       it { is_expected.to contain_file('/srv/application-config/wso2_test/identity/application-authentication.xml') }
-      it { is_expected.to contain_file('/srv/application-config/wso2_test/user-mgt.xml') }
       it { is_expected.to contain_file('/srv/application-lib/wso2_test') }
       it { is_expected.to contain_file('/srv/application-lib/wso2_test/dropins') }
       it { is_expected.to contain_file('/srv/application-lib/wso2_test/lib') }
