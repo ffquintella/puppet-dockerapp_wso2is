@@ -1,3 +1,6 @@
+<%- | 
+      Boolean $enable_ha
+| -%>
 <?xml version='1.0' encoding='utf-8'?>
 
 <Server port="8005" shutdown="SHUTDOWN">
@@ -53,6 +56,9 @@
                    scheme="https"
                    secure="true"
                    SSLEnabled="true"
+                   <% if $enable_ha { -%>
+                   proxyPort="443"
+                   <%} -%>
                    compressionMinSize="2048"
                    noCompressionUserAgents="gozilla, traviata"
                    compressableMimeType="text/html,text/javascript,application/x-javascript,application/javascript,application/xml,text/css,application/xslt+xml,text/xsl,image/gif,image/jpg,image/jpeg"

@@ -614,7 +614,9 @@ class dockerapp_wso2is (
       }
 
       file {"${conf_configdir}/tomcat/catalina-server.xml":
-        content => epp('dockerapp_wso2is/catalina-server.xml.epp'),
+        content => epp('dockerapp_wso2is/catalina-server.xml.epp', {
+          'enable_ha'  => $enable_ha,
+        }),
         notify  => Docker::Run[$service_name],
         require => File[$conf_configdir],
       }
