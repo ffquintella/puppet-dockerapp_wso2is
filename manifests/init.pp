@@ -349,13 +349,13 @@ class dockerapp_wso2is (
         require     => File["${conf_datadir}/certs"],
       }
 
-      java_ks { "wso2:truststore-${cert_file}":
+      java_ks { "${cert_file}:trust-${cert_file}":
         ensure       => latest,
         certificate  => "${conf_datadir}/certs/${cert_file}.crt",
         target       => "${conf_datadir}/repository-resources-security/client-truststore.jks",
         password     => 'wso2carbon',
         trustcacerts => true,
-        require      => Class['java'],
+        require      => [Class['java'], Remote_file["${conf_datadir}/certs/${cert_file}.crt"]],
       }
     }
   }
