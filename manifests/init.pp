@@ -689,10 +689,11 @@ class dockerapp_wso2is (
     ]
   }
 
-
-
-
-  $envs = []
+  if $enable_ha {
+    $envs = ['JAVA_OPTS="-Dorg.opensaml.httpclient.https.disableHostnameVerification=true"']
+  }else{
+    $envs = []
+  }
 
   dockerapp::run {$service_name:
     image        => $image,
