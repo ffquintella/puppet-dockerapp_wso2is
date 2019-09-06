@@ -164,6 +164,9 @@
 # @param [Array] extra_trust_certs 
 #   Extra certificates urls to download and trust
 #
+# @param [Array] cors_domains
+#   List of domains to accept in cors
+#
 class dockerapp_wso2is (
   String $service_name = 'wso2is',
   String $version = '5.8.0',
@@ -220,6 +223,7 @@ class dockerapp_wso2is (
   String $pwd_java_script_regex = '^[\S]{5,30}$',
   String $pwd_violation_msg = 'Password length should be within 5 to 30 characters',
   Array $extra_trust_certs = [],
+  Array $cors_domains = [],
 ){
 
   include 'dockerapp'
@@ -664,6 +668,34 @@ class dockerapp_wso2is (
   }
 
   if( $use_alternate_dirs == true  ){
+    file{ "${alternate_deployment_dir}/server":
+      ensure  => directory,
+      owner   => $dir_owner,
+      group   => $dir_group,
+      require => File[$alternate_deployment_dir],
+    }
+    ->file{ "${alternate_deployment_dir}/server/webapps":
+      ensure => directory,
+      owner  => $dir_owner,
+      group  => $dir_group,
+    }
+    ->file{ "${alternate_deployment_dir}/server/webapps/oauth2":
+      ensure => directory,
+      owner  => $dir_owner,
+      group  => $dir_group,
+    }
+    ->file{ "${alternate_deployment_dir}/server/webapps/oauth2/WEB-INF":
+      ensure => directory,
+      owner  => $dir_owner,
+      group  => $dir_group,
+    }
+    ->file{ "${alternate_deployment_dir}/server/webapps/oauth2/WEB-INF/web.xml":
+      owner   => $dir_owner,
+      group   => $dir_group,
+      content => epp('dockerapp_wso2is/oauth/web.xml.epp', {
+          'cors_domains' => $cors_domains,
+        }),
+    }
     $volumes = [
       "${alternate_deployment_dir}:/home/wso2carbon/wso2is-${version}/repository/deployment",
       "${alternate_tenants_dir}:/home/wso2carbon/wso2is-${version}/repository/tenants",
@@ -677,7 +709,46 @@ class dockerapp_wso2is (
       "${conf_libdir}/lib:/home/wso2carbon/wso2is-${version}/repository/components/lib",
     ]
   }else{
+    file{ "${conf_datadir}/deployment":
+      ensure => directory,
+      owner  => $dir_owner,
+      group  => $dir_group,
+    }
+    ->file{ "${conf_datadir}/deployment/server":
+      ensure  => directory,
+      owner   => $dir_owner,
+      group   => $dir_group,
+      require => File["${conf_datadir}/deployment"],
+    }
+    ->file{ "${conf_datadir}/deployment/server":
+      ensure => directory,
+      owner  => $dir_owner,
+      group  => $dir_group,
+    }
+    ->file{ "${conf_datadir}/deployment/server/webapps":
+      ensure => directory,
+      owner  => $dir_owner,
+      group  => $dir_group,
+    }
+    ->file{ "${conf_datadir}/deployment/server/webapps/oauth2":
+      ensure => directory,
+      owner  => $dir_owner,
+      group  => $dir_group,
+    }
+    ->file{ "${conf_datadir}/deployment/server/webapps/oauth2/WEB-INF":
+      ensure => directory,
+      owner  => $dir_owner,
+      group  => $dir_group,
+    }
+    ->file{ "${conf_datadir}/deployment/server/webapps/oauth2/WEB-INF/web.xml":
+      owner   => $dir_owner,
+      group   => $dir_group,
+      content => epp('dockerapp_wso2is/oauth/web.xml.epp', {
+          'cors_domains' => $cors_domains,
+        }),
+    }
     $volumes = [
+      "${conf_datadir}/deployment:/home/wso2carbon/wso2is-${version}/repository/deployment",
       "${conf_datadir}/directory:/home/wso2carbon/wso2is-${version}/repository/data/org.wso2.carbon.directory",
       "${conf_datadir}/database:/home/wso2carbon/wso2is-${version}/repository/database",
       "${conf_datadir}/repository-resources-security:/home/wso2carbon/wso2is-${version}/repository/resources/security",
@@ -690,7 +761,7 @@ class dockerapp_wso2is (
   }
 
   if $enable_ha {
-    $envs = ['JAVA_OPTS=-Dorg.opensaml.httpclient.https.disableHostnameVerification=true -Dorg.opensaml.httpclient.https.disableHostnameVerification=true -Djava.util.prefs.systemRoot=/home/wso2carbon/.java']
+    $envs = ['JAVA_OPTS=-Dorg.opensaml.httpclient.https.disableHostnameVerification=true -Djava.util.prefs.systemRoot=/home/wso2carbon/.java -Djava.util.prefs.userRoot=/home/wso2carbon/.java/.userPrefs']
   }else{
     $envs = []
   }
