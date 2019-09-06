@@ -672,7 +672,6 @@ class dockerapp_wso2is (
       ensure  => directory,
       owner   => $dir_owner,
       group   => $dir_group,
-      require => File[$alternate_deployment_dir],
     }
     ->file{ "${alternate_deployment_dir}/server/webapps":
       ensure => directory,
