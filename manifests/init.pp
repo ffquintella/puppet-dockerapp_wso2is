@@ -562,6 +562,7 @@ class dockerapp_wso2is (
             'pwd_java_regex'              => $pwd_java_regex,
             'pwd_java_script_regex'       => $pwd_java_script_regex,
             'pwd_violation_msg'           => $pwd_violation_msg,
+            'enable_scim'                 => $enable_scim,
             })),
           authorization_token => $dbconn['ccm_api_key'],
           credentials         => [$ad_service_ccm_key],
