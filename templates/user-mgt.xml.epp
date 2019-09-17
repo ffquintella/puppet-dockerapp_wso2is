@@ -17,6 +17,7 @@
       String $pwd_java_regex = '[a-zA-Z0-9._\-|//]{3,30}$',
       String $pwd_java_script_regex = '^[\S]{5,30}$',
       String $pwd_violation_msg = 'Password length should be within 5 to 30 characters',
+      Boolean $enable_scim = false,
 | -%>
 <!--
   ~ 
@@ -96,7 +97,11 @@
             <Property name="PasswordJavaRegExViolationErrorMsg"><%= $pwd_violation_msg -%></Property>
             <Property name="RolenameJavaRegEx">[a-zA-Z0-9._\-|//]{3,30}$</Property>
             <Property name="RolenameJavaScriptRegEx">^[\S]{3,30}$</Property>
+            <% if $enable_scim == false { -%>
             <Property name="SCIMEnabled">false</Property>
+            <% } else { -%>
+            <Property name="SCIMEnabled">true</Property>
+            <% } -%>
             <Property name="IsBulkImportSupported">false</Property>
             <Property name="EmptyRolesAllowed">true</Property>
             <Property name="PasswordHashMethod">PLAIN_TEXT</Property>

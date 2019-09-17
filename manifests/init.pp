@@ -167,6 +167,9 @@
 # @param [Array] cors_domains
 #   List of domains to accept in cors
 #
+# @param [Boolean] enable_scim
+#   Enables or disables scim api
+#
 class dockerapp_wso2is (
   String $service_name = 'wso2is',
   String $version = '5.8.0',
@@ -224,6 +227,7 @@ class dockerapp_wso2is (
   String $pwd_violation_msg = 'Password length should be within 5 to 30 characters',
   Array $extra_trust_certs = [],
   Array $cors_domains = [],
+  Boolean $enable_scim = false,
 ){
 
   include 'dockerapp'
@@ -498,7 +502,7 @@ class dockerapp_wso2is (
             'pwd_java_regex'              => $pwd_java_regex,
             'pwd_java_script_regex'       => $pwd_java_script_regex,
             'pwd_violation_msg'           => $pwd_violation_msg,
-
+            'enable_scim'                 => $enable_scim,
             }),
           notify  => Docker::Run[$service_name],
           require => File[$conf_configdir],
