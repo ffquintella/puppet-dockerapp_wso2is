@@ -215,7 +215,7 @@ class dockerapp_wso2is (
   String $ad_service_ccm_key = '',
   String $ad_user_search_base = '',
   String $ad_group_search_base = '',
-  String $ad_user_name_search_filter = '(&amp;(objectClass=user)(sAMAccountName=?))',
+  String $ad_user_name_search_filter = '(sAMAccountName=?)',
   String $ad_user_name_list_filter = '(&amp;(objectClass=user)(!(sn=Service)))',
   String $ad_group_name_search_filter = '(&amp;(objectClass=group)(cn=?))',
   String $ad_group_name_list_filter = '(objectcategory=group)',
