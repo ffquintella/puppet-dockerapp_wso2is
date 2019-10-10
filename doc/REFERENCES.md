@@ -212,6 +212,14 @@ The initial system admin account password
 
 Default value: 'secret'
 
+##### `adm_role`
+
+Data type: `String`
+
+The initial system admin role
+
+Default value: 'wso2isadmin'
+
 ##### `use_external_auth_app`
 
 Data type: `Boolean`
@@ -241,6 +249,246 @@ Default value: ''
 Data type: `String`
 
 The url to the external auth endpoint claims page
+
+Default value: ''
+
+##### `enable_ha`
+
+Data type: `Boolean`
+
+This paramenter allows the changes needed to enable a high avaliability setup
+
+Default value: `false`
+
+##### `ha_cluster_name`
+
+Data type: `String`
+
+The name of the ha cluster
+
+Default value: 'wso2cluster'
+
+##### `alternate_deployment_dir`
+
+Data type: `String`
+
+An alternate deployment dir to be mounted in case of need
+
+Default value: ''
+
+##### `alternate_tenants_dir`
+
+Data type: `String`
+
+An alternate tenants dir to be mounted in case of need
+
+Default value: ''
+
+##### `use_alternate_dirs`
+
+Data type: `Boolean`
+
+Enable or disable the use of alternate dirs
+
+Default value: `false`
+
+##### `use_active_directory`
+
+Data type: `Boolean`
+
+If we are using Active Directory as our primary user store
+
+Default value: `false`
+
+##### `ad_server`
+
+Data type: `String`
+
+The active directory server (PDC is prefered)
+
+Default value: ''
+
+##### `ad_port`
+
+Data type: `String`
+
+The active directory port (636)
+
+Default value: '636'
+
+##### `ad_use_ssl`
+
+Data type: `Boolean`
+
+If the connection to active directory uses ssl
+
+Default value: `true`
+
+##### `ad_service_user`
+
+Data type: `String`
+
+The CN of the active directory service user
+
+Default value: ''
+
+##### `ad_service_pwd`
+
+Data type: `String`
+
+The password of the active directory service user
+
+Default value: ''
+
+##### `ad_user_search_base`
+
+Data type: `String`
+
+The base OU to search the users
+
+Default value: ''
+
+##### `ad_group_search_base`
+
+Data type: `String`
+
+The base OU to search the groups
+
+Default value: ''
+
+##### `ad_user_name_search_filter`
+
+Data type: `String`
+
+The search filter for users on AD
+
+Default value: '(sAMAccountName=?)'
+
+##### `ad_user_name_list_filter`
+
+Data type: `String`
+
+The list filter for users on AD
+
+Default value: '(&amp;(objectClass=user)(!(sn=Service)))'
+
+##### `ad_group_name_search_filter`
+
+Data type: `String`
+
+The search filter for groups on AD
+
+Default value: '(&amp;(objectClass=group)(cn=?))'
+
+##### `ad_group_name_list_filter`
+
+Data type: `String`
+
+The list filter for groups on AD
+
+Default value: '(objectcategory=group)'
+
+##### `master_log_level`
+
+Data type: `String`
+
+The wso2 master log level default = INFO
+
+Default value: 'INFO'
+
+##### `authentication_log_level`
+
+Data type: `String`
+
+The wso2 authentication log level default = INFO
+
+Default value: 'INFO'
+
+##### `identity_log_level`
+
+Data type: `String`
+
+The wso2 identity log level default = INFO
+
+Default value: 'INFO'
+
+##### `pwd_java_regex`
+
+Data type: `String`
+
+The java regex to validate passwords
+
+Default value: '[a-zA-Z0-9._\-|//]{3,30}$'
+
+##### `pwd_java_script_regex`
+
+Data type: `String`
+
+The java script regex to validate passwords
+
+Default value: '^[\S]{5,30}$'
+
+##### `pwd_violation_msg`
+
+Data type: `String`
+
+The error message to be shown when the validaton fails
+
+Default value: 'Password length should be within 5 to 30 characters'
+
+##### `extra_trust_certs`
+
+Data type: `Array`
+
+Extra certificates urls to download and trust
+
+Default value: []
+
+##### `cors_domains`
+
+Data type: `Array`
+
+List of domains to accept in cors
+
+Default value: []
+
+##### `enable_scim`
+
+Data type: `Boolean`
+
+Enables or disables scim api
+
+Default value: `false`
+
+##### `timezone`
+
+Data type: `String`
+
+The container timezone
+
+Default value: 'America/Sao_Paulo'
+
+##### `ha_members`
+
+Data type: `Array`
+
+
+
+Default value: ['127.0.0.1']
+
+##### `is_fqdn`
+
+Data type: `String`
+
+
+
+Default value: $fqdn
+
+##### `ad_service_ccm_key`
+
+Data type: `String`
+
+
 
 Default value: ''
 
