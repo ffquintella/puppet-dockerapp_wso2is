@@ -170,6 +170,9 @@
 # @param [Boolean] enable_scim
 #   Enables or disables scim api
 #
+# @param [String] timezone 
+#   The container timezone
+#
 class dockerapp_wso2is (
   String $service_name = 'wso2is',
   String $version = '5.8.0',
@@ -228,6 +231,7 @@ class dockerapp_wso2is (
   Array $extra_trust_certs = [],
   Array $cors_domains = [],
   Boolean $enable_scim = false,
+  String $timezone = 'America/Sao_Paulo',
 ){
 
   include 'dockerapp'
@@ -765,9 +769,10 @@ class dockerapp_wso2is (
   }
 
   if $enable_ha {
-    $envs = ['JAVA_OPTS=-Dorg.opensaml.httpclient.https.disableHostnameVerification=true -Djava.util.prefs.systemRoot=/home/wso2carbon/.java -Djava.util.prefs.userRoot=/home/wso2carbon/.java/.userPrefs']
+    $envs = ['JAVA_OPTS=-Dorg.opensaml.httpclient.https.disableHostnameVerification=true -Djava.util.prefs.systemRoot=/home/wso2carbon/.java -Djava.util.prefs.userRoot=/home/wso2carbon/.java/.userPrefs',
+    "-e TZ=${timezone}"]
   }else{
-    $envs = []
+    $envs = ["-e TZ=${timezone}"]
   }
 
   dockerapp::run {$service_name:
