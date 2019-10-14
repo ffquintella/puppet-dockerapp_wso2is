@@ -468,6 +468,70 @@ The container timezone
 
 Default value: 'America/Sao_Paulo'
 
+##### `send_mail`
+
+Data type: `Boolean`
+
+If the server is to send e-mails
+
+Default value: `false`
+
+##### `mail_authenticate`
+
+Data type: `Boolean`
+
+If the email server needs authentication
+
+Default value: `false`
+
+##### `mail_use_tls`
+
+Data type: `Boolean`
+
+If the email server users tls on the transport
+
+Default value: `true`
+
+##### `mail_user`
+
+Data type: `String`
+
+The email server authentication user
+
+Default value: 'user'
+
+##### `mail_password`
+
+Data type: `String`
+
+The email server authentication password
+
+Default value: 'password'
+
+##### `mail_from`
+
+Data type: `String`
+
+The from of the sent email
+
+Default value: 'no@mail.com'
+
+##### `mail_host`
+
+Data type: `String`
+
+The email server host
+
+Default value: 'smtp.mail.com'
+
+##### `mail_port`
+
+Data type: `String`
+
+The email service port
+
+Default value: '587'
+
 ##### `ha_members`
 
 Data type: `Array`
