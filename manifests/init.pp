@@ -173,6 +173,30 @@
 # @param [String] timezone 
 #   The container timezone
 #
+# @param [Boolean] send_mail
+#   If the server is to send e-mails
+#
+# @param [Boolean] mail_authenticate
+#   If the email server needs authentication
+#
+# @param [Boolean] mail_use_tls
+#   If the email server users tls on the transport
+#
+# @param [String] mail_user 
+#   The email server authentication user
+#
+# @param [String] mail_password 
+#   The email server authentication password
+#
+# @param [String] mail_from 
+#   The from of the sent email
+#
+# @param [String] mail_host 
+#   The email server host
+#
+# @param [String] mail_port 
+#   The email service port
+#
 class dockerapp_wso2is (
   String $service_name = 'wso2is',
   String $version = '5.8.0',
@@ -232,6 +256,14 @@ class dockerapp_wso2is (
   Array $cors_domains = [],
   Boolean $enable_scim = false,
   String $timezone = 'America/Sao_Paulo',
+  Boolean $send_mail = false,
+  Boolean $mail_authenticate = false,
+  String $mail_user = 'user',
+  String $mail_password = 'password',
+  String $mail_from = 'no@mail.com',
+  String $mail_host = 'smtp.mail.com',
+  String $mail_port = '587',
+  Boolean $mail_use_tls = true,
 ){
 
   include 'dockerapp'
@@ -595,6 +627,21 @@ class dockerapp_wso2is (
         content => epp('dockerapp_wso2is/carbon.xml.epp', {
           'is_fqdn' => $is_fqdn,
           'version' => $version
+          }),
+        notify  => Docker::Run[$service_name],
+        require => File[$conf_configdir],
+      }
+      
+      file {"${conf_configdir}/output-event-adapters.xml":
+        content => epp('dockerapp_wso2is/output-event-adapters.xml.epp', {
+          'send_mail'         => $send_mail,
+          'mail_authenticate' => $mail_authenticate,
+          'mail_user'         => $mail_user,
+          'mail_password'     => $mail_password,
+          'mail_from'         => $mail_from,
+          'mail_host'         => $mail_host,
+          'mail_port'         => $mail_port,
+          'mail_use_tls'      => $mail_use_tls,
           }),
         notify  => Docker::Run[$service_name],
         require => File[$conf_configdir],
