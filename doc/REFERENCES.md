@@ -532,6 +532,14 @@ The email service port
 
 Default value: '587'
 
+##### `auth_password_recovery`
+
+Data type: `Boolean`
+
+If the rest api to auth_password_recovery should be authenticated
+
+Default value: `true`
+
 ##### `ha_members`
 
 Data type: `Array`

@@ -197,6 +197,9 @@
 # @param [String] mail_port 
 #   The email service port
 #
+# @param [Boolean] auth_password_recovery
+#   If the rest api to auth_password_recovery should be authenticated
+#
 class dockerapp_wso2is (
   String $service_name = 'wso2is',
   String $version = '5.8.0',
@@ -264,6 +267,7 @@ class dockerapp_wso2is (
   String $mail_host = 'smtp.mail.com',
   String $mail_port = '587',
   Boolean $mail_use_tls = true,
+  Boolean $auth_password_recovery = true,
 ){
 
   include 'dockerapp'
@@ -721,6 +725,14 @@ class dockerapp_wso2is (
         notify  => Docker::Run[$service_name],
         require => File[$conf_configdir],
       }
+  }
+
+  file {"${conf_configdir}/identity/identity.xml":
+    content => epp('dockerapp_wso2is/identity.xml.epp',
+      { 'auth_password_recovery' => $auth_password_recovery,
+    }),
+    notify  => Docker::Run[$service_name],
+    require => File[$conf_configdir],
   }
 
   if( $use_alternate_dirs == true  ){
