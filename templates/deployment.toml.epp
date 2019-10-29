@@ -1,0 +1,74 @@
+<%- | 
+      String $cluster_name,
+      String $ip_address,
+      Array  $ha_members,
+      String $hostname,
+      String $auth_endpoint = '/authenticationendpoint/login.do',
+      String $auth_endpoint_retry = '/authenticationendpoint/retry.do',
+      String $auth_endpoint_claims = '/authenticationendpoint/claims.do',
+      Boolean $enable_ha = false, 
+| -%>
+
+
+[server]
+hostname = "<%= $hostname -%>"
+node_ip = "<%= $ip_address -%>"
+base_path = "https://$ref{server.hostname}:${carbon.management.port}"
+
+#[super_admin]
+#username = "admin"
+#password = "admin"
+#create_admin_account = true
+
+[user_store]
+type = "read_write_ldap"
+connection_url = "ldap://localhost:${Ports.EmbeddedLDAP.LDAPServerPort}"
+connection_name = "uid=admin,ou=system"
+connection_password = "admin"
+base_dn = "dc=wso2,dc=org"      #refers the base dn on which the user and group search bases will be generated
+
+#[database.identity_db]
+#type = "h2"
+#url = "jdbc:h2:./repository/database/WSO2IDENTITY_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
+#username = "wso2carbon"
+#password = "wso2carbon"
+
+#[database.shared_db]
+#type = "h2"
+#url = "jdbc:h2:./repository/database/WSO2SHARED_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
+#username = "wso2carbon"
+#password = "wso2carbon"
+
+[keystore.primary]
+name = "wso2carbon.jks"
+password = "wso2carbon"
+
+####
+
+[authentication.endpoints] 
+login_url=<%= $auth_endpoint -%>
+retry_url=<%= $auth_endpoint_retry -%>
+request_missing_claims_url=<%= $auth_endpoint_claims -%>
+
+<% if $enable_ha == true { -%>
+[clustering]
+membership_scheme = "wka"
+local_member_host = "<%= $ip_address -%>"
+local_member_port = "4000"
+<% } -%>
+
+[transport.http]
+port = "80"
+
+[transport.https]
+proxyPort = "443" 
+
+[event.default_listener.application_authentication]
+priority = "11"
+enable = "true"
+
+[identity_mgt.events.schemes.analyticsLoginDataPublisher.properties]
+enable = "true"
+
+[identity_mgt.events.schemes.analyticsSessionDataPublisher.properties]
+enable = "true"

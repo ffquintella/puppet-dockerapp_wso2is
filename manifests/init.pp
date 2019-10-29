@@ -351,6 +351,21 @@ if( $version == '5.9.0') {
     require => File[$conf_configdir],
   }
 
+  file {"${conf_configdir}/deployment.toml":
+    content => epp('dockerapp_wso2is/deployment.toml.epp', {
+        'auth_endpoint'        => $external_auth_endpoint,
+        'auth_endpoint_retry'  => $external_auth_endpoint_retry,
+        'auth_endpoint_claims' => $external_auth_endpoint_claims,
+        'enable_ha'            => $enable_ha,
+        'cluster_name'         => $ha_cluster_name,
+        'ha_members'           => $ha_members,
+        'ip_address'           => $::networking['interfaces']['eth0']['ip'],
+        'hostname'             => $is_fqdn
+      }),
+    notify  => Docker::Run[$service_name],
+    require => File[$conf_configdir],
+  }
+
 } else {
 
   exec { "${service_name}-copy-configs":
@@ -517,6 +532,8 @@ if( $version == '5.9.0') {
         }
       }
 
+      ### CHANGE THIS 
+
       if !$use_ccm {
         file {"${conf_configdir}/datasources/master-datasources.xml":
           content => epp('dockerapp_wso2is/master-datasources.xml.epp', { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, }),
@@ -626,88 +643,79 @@ if( $version == '5.9.0') {
         }
       }
 
+      ######
 
-      file {"${conf_configdir}/axis2/axis2.xml":
-        content => epp('dockerapp_wso2is/axis2.xml.epp', {
-          'enable_ha'    => $enable_ha,
-          'cluster_name' => $ha_cluster_name,
-          'ha_members'   => $ha_members,
-          'ip_address'   => $::networking['interfaces']['eth0']['ip'],
-          }),
-        replace => true,
-        notify  => Docker::Run[$service_name],
-        require => File[$conf_configdir],
-      }
-
-      file {"${conf_configdir}/carbon.xml":
-        content => epp('dockerapp_wso2is/carbon.xml.epp', {
-          'is_fqdn' => $is_fqdn,
-          'version' => $version
-          }),
-        notify  => Docker::Run[$service_name],
-        require => File[$conf_configdir],
-      }
-
-      file {"${conf_configdir}/output-event-adapters.xml":
-        content => epp('dockerapp_wso2is/output-event-adapters.xml.epp', {
-          'send_mail'         => $send_mail,
-          'mail_authenticate' => $mail_authenticate,
-          'mail_user'         => $mail_user,
-          'mail_password'     => $mail_password,
-          'mail_from'         => $mail_from,
-          'mail_host'         => $mail_host,
-          'mail_port'         => $mail_port,
-          'mail_use_tls'      => $mail_use_tls,
-          }),
-        notify  => Docker::Run[$service_name],
-        require => File[$conf_configdir],
-      }
-
-      file {"${conf_configdir}/identity/embedded-ldap.xml":
-        content => epp('dockerapp_wso2is/embedded-ldap.xml.epp', {
-          'enable_ldap' => !$use_active_directory,
-          }),
-        notify  => Docker::Run[$service_name],
-        require => File[$conf_configdir],
-      }
-
-      if $use_active_directory == true {
-        file {"${conf_configdir}/identity/service-providers/sp_dashboard.xml":
-          ensure => file,
-          source => 'puppet:///modules/dockerapp_wso2is/sp_dashboard_ad.xml',
-          owner  => $dir_owner,
-          group  => $dir_group,
+      if( $version == '5.8.0') {
+        file {"${conf_configdir}/axis2/axis2.xml":
+          content => epp('dockerapp_wso2is/axis2.xml.epp', {
+            'enable_ha'    => $enable_ha,
+            'cluster_name' => $ha_cluster_name,
+            'ha_members'   => $ha_members,
+            'ip_address'   => $::networking['interfaces']['eth0']['ip'],
+            }),
+          replace => true,
+          notify  => Docker::Run[$service_name],
+          require => File[$conf_configdir],
         }
-      }
 
-      file {"${conf_configdir}/registry.xml":
-        content => epp('dockerapp_wso2is/registry.xml.epp', {
-          'use_ha'  => $enable_ha,
-          'db_conn' => $dbconn,
-          }),
-        notify  => Docker::Run[$service_name],
-        require => File[$conf_configdir],
-      }
-
-      file {"${conf_configdir}/tomcat/catalina-server.xml":
-        content => epp('dockerapp_wso2is/catalina-server.xml.epp', {
-          'enable_ha'  => $enable_ha,
-        }),
-        notify  => Docker::Run[$service_name],
-        require => File[$conf_configdir],
-      }
-
-      if( $version == '5.9.0') {
-        file {"${conf_configdir}/log4j2.properties":
-          content => epp('dockerapp_wso2is/log4j2.properties.epp', {
-            'master_log_level'         => $master_log_level,
-            'authentication_log_level' => $authentication_log_level,
-            'identity_log_level'       => $identity_log_level,
+        file {"${conf_configdir}/carbon.xml":
+          content => epp('dockerapp_wso2is/carbon.xml.epp', {
+            'is_fqdn' => $is_fqdn,
+            'version' => $version
             }),
           notify  => Docker::Run[$service_name],
           require => File[$conf_configdir],
         }
-      } else {
+
+        file {"${conf_configdir}/output-event-adapters.xml":
+          content => epp('dockerapp_wso2is/output-event-adapters.xml.epp', {
+            'send_mail'         => $send_mail,
+            'mail_authenticate' => $mail_authenticate,
+            'mail_user'         => $mail_user,
+            'mail_password'     => $mail_password,
+            'mail_from'         => $mail_from,
+            'mail_host'         => $mail_host,
+            'mail_port'         => $mail_port,
+            'mail_use_tls'      => $mail_use_tls,
+            }),
+          notify  => Docker::Run[$service_name],
+          require => File[$conf_configdir],
+        }
+
+        file {"${conf_configdir}/identity/embedded-ldap.xml":
+          content => epp('dockerapp_wso2is/embedded-ldap.xml.epp', {
+            'enable_ldap' => !$use_active_directory,
+            }),
+          notify  => Docker::Run[$service_name],
+          require => File[$conf_configdir],
+        }
+
+        if $use_active_directory == true {
+          file {"${conf_configdir}/identity/service-providers/sp_dashboard.xml":
+            ensure => file,
+            source => 'puppet:///modules/dockerapp_wso2is/sp_dashboard_ad.xml',
+            owner  => $dir_owner,
+            group  => $dir_group,
+          }
+        }
+
+        file {"${conf_configdir}/registry.xml":
+          content => epp('dockerapp_wso2is/registry.xml.epp', {
+            'use_ha'  => $enable_ha,
+            'db_conn' => $dbconn,
+            }),
+          notify  => Docker::Run[$service_name],
+          require => File[$conf_configdir],
+        }
+
+        file {"${conf_configdir}/tomcat/catalina-server.xml":
+          content => epp('dockerapp_wso2is/catalina-server.xml.epp', {
+            'enable_ha'  => $enable_ha,
+          }),
+          notify  => Docker::Run[$service_name],
+          require => File[$conf_configdir],
+        }
+
         file {"${conf_configdir}/log4j.properties":
           content => epp('dockerapp_wso2is/log4j.properties.epp', {
             'master_log_level'         => $master_log_level,
@@ -718,7 +726,6 @@ if( $version == '5.9.0') {
           require => File[$conf_configdir],
         }
       }
-
 
       if $db_jdbc_driver =~ /(.*\/)(.*)[-_].*\.jar/ {
         $jdbc_base_path = $1
@@ -740,7 +747,16 @@ if( $version == '5.9.0') {
     }
   }
 
-  if $use_external_auth_app {
+
+  if( $version == '5.8.0') {
+    file {"${conf_configdir}/identity/identity.xml":
+      content => epp('dockerapp_wso2is/identity.xml.epp',
+        { 'auth_password_recovery' => $auth_password_recovery,
+      }),
+      notify  => Docker::Run[$service_name],
+      require => File[$conf_configdir],
+    }
+    if $use_external_auth_app {
       file {"${conf_configdir}/identity/application-authentication.xml":
         content => epp('dockerapp_wso2is/application-authentication.xml.epp',
           { 'auth_endpoint'        => $external_auth_endpoint,
@@ -750,19 +766,10 @@ if( $version == '5.9.0') {
         notify  => Docker::Run[$service_name],
         require => File[$conf_configdir],
       }
-  }
-
-  if( $version == '5.9.0') {
-    file {"${conf_configdir}/identity/identity.xml":
-      content => epp('dockerapp_wso2is/identity-5.9.0.xml.epp',
-        { 'auth_password_recovery' => $auth_password_recovery,
-      }),
-      notify  => Docker::Run[$service_name],
-      require => File[$conf_configdir],
     }
-  } else {
-    file {"${conf_configdir}/identity/identity.xml":
-      content => epp('dockerapp_wso2is/identity.xml.epp',
+  }else{
+    file {"${conf_configdir}/identity/deployment.toml":
+      content => epp('dockerapp_wso2is/identity/deployment.toml.epp',
         { 'auth_password_recovery' => $auth_password_recovery,
       }),
       notify  => Docker::Run[$service_name],
@@ -772,9 +779,9 @@ if( $version == '5.9.0') {
 
   if( $use_alternate_dirs == true  ){
     file{ "${alternate_deployment_dir}/server":
-      ensure  => directory,
-      owner   => $dir_owner,
-      group   => $dir_group,
+      ensure => directory,
+      owner  => $dir_owner,
+      group  => $dir_group,
     }
     ->file{ "${alternate_deployment_dir}/server/webapps":
       ensure => directory,
