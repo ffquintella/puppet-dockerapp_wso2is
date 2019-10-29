@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.3.4
+
+Small bugfixes
+
+**Bugfixes**
+- Fix deployment.toml bug
+
 ## Release 1.3.3
 
 Support to the wso2is 5.9.0
