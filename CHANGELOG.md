@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.3.1
+
+Support to the wso2is 5.9.0
+
+**Features**
+- Adding support to the 5.9.0 release
+
 ## Release 1.2.1
 
 New features

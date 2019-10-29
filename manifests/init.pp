@@ -343,11 +343,23 @@ class dockerapp_wso2is (
     require => File["${conf_datadir}/db-scripts"],
   }
 
+if( $version == '5.9.0') {
+
+  exec { "${service_name}-copy-configs":
+    command => "/usr/bin/docker run --rm --name=${service_name}_tmp -v ${conf_configdir}:/conf_dest --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/conf/* /conf_dest\"",
+    creates => "${conf_configdir}/metrics.xml",
+    require => File[$conf_configdir],
+  }
+
+} else {
+
   exec { "${service_name}-copy-configs":
     command => "/usr/bin/docker run --rm --name=${service_name}_tmp -v ${conf_configdir}:/conf_dest --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/conf/* /conf_dest\"",
     creates => "${conf_configdir}/log4j.properties",
     require => File[$conf_configdir],
   }
+
+}
 
   exec { "${service_name}-copy-dropins":
     command => "/usr/bin/docker run --rm --name=${service_name}_cp_dropins -v ${conf_libdir}/dropins:/conf_dest --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/components/dropins/* /conf_dest\"",
@@ -635,7 +647,7 @@ class dockerapp_wso2is (
         notify  => Docker::Run[$service_name],
         require => File[$conf_configdir],
       }
-      
+
       file {"${conf_configdir}/output-event-adapters.xml":
         content => epp('dockerapp_wso2is/output-event-adapters.xml.epp', {
           'send_mail'         => $send_mail,
@@ -685,15 +697,28 @@ class dockerapp_wso2is (
         require => File[$conf_configdir],
       }
 
-      file {"${conf_configdir}/log4j.properties":
-        content => epp('dockerapp_wso2is/log4j.properties.epp', {
-          'master_log_level'         => $master_log_level,
-          'authentication_log_level' => $authentication_log_level,
-          'identity_log_level'       => $identity_log_level,
-          }),
-        notify  => Docker::Run[$service_name],
-        require => File[$conf_configdir],
+      if( $version == '5.9.0') {
+        file {"${conf_configdir}/log4j2.properties":
+          content => epp('dockerapp_wso2is/log4j2.properties.epp', {
+            'master_log_level'         => $master_log_level,
+            'authentication_log_level' => $authentication_log_level,
+            'identity_log_level'       => $identity_log_level,
+            }),
+          notify  => Docker::Run[$service_name],
+          require => File[$conf_configdir],
+        }
+      } else {
+        file {"${conf_configdir}/log4j.properties":
+          content => epp('dockerapp_wso2is/log4j.properties.epp', {
+            'master_log_level'         => $master_log_level,
+            'authentication_log_level' => $authentication_log_level,
+            'identity_log_level'       => $identity_log_level,
+            }),
+          notify  => Docker::Run[$service_name],
+          require => File[$conf_configdir],
+        }
       }
+
 
       if $db_jdbc_driver =~ /(.*\/)(.*)[-_].*\.jar/ {
         $jdbc_base_path = $1
