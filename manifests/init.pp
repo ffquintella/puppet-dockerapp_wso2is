@@ -752,12 +752,22 @@ if( $version == '5.9.0') {
       }
   }
 
-  file {"${conf_configdir}/identity/identity.xml":
-    content => epp('dockerapp_wso2is/identity.xml.epp',
-      { 'auth_password_recovery' => $auth_password_recovery,
-    }),
-    notify  => Docker::Run[$service_name],
-    require => File[$conf_configdir],
+  if( $version == '5.9.0') {
+    file {"${conf_configdir}/identity/identity.xml":
+      content => epp('dockerapp_wso2is/identity-5.9.0.xml.epp',
+        { 'auth_password_recovery' => $auth_password_recovery,
+      }),
+      notify  => Docker::Run[$service_name],
+      require => File[$conf_configdir],
+    }
+  } else {
+    file {"${conf_configdir}/identity/identity.xml":
+      content => epp('dockerapp_wso2is/identity.xml.epp',
+        { 'auth_password_recovery' => $auth_password_recovery,
+      }),
+      notify  => Docker::Run[$service_name],
+      require => File[$conf_configdir],
+    }
   }
 
   if( $use_alternate_dirs == true  ){

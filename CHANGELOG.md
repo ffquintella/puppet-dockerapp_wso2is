@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.3.2
+
+Support to the wso2is 5.9.0
+
+**Bugfixes**
+- Fix identiy.xml template
+
 ## Release 1.3.1
 
 Support to the wso2is 5.9.0
