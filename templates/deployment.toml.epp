@@ -3,10 +3,12 @@
       String $ip_address,
       Array  $ha_members,
       String $hostname,
+      Hash $db_conn,
+      Boolean $use_ccm = false,
       String $auth_endpoint = '/authenticationendpoint/login.do',
       String $auth_endpoint_retry = '/authenticationendpoint/retry.do',
       String $auth_endpoint_claims = '/authenticationendpoint/claims.do',
-      Boolean $enable_ha = false, 
+      Boolean $enable_ha = false,
 | -%>
 
 
@@ -27,17 +29,48 @@ connection_name = "uid=admin,ou=system"
 connection_password = "admin"
 base_dn = "dc=wso2,dc=org"      #refers the base dn on which the user and group search bases will be generated
 
-#[database.identity_db]
-#type = "h2"
-#url = "jdbc:h2:./repository/database/WSO2IDENTITY_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
-#username = "wso2carbon"
-#password = "wso2carbon"
 
-#[database.shared_db]
-#type = "h2"
-#url = "jdbc:h2:./repository/database/WSO2SHARED_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
-#username = "wso2carbon"
-#password = "wso2carbon"
+<% if $db_conn['db_type'] == 'h2' { -%>
+[database.identity_db]
+type = "h2"
+url = "jdbc:h2:./repository/database/WSO2IDENTITY_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
+username = "wso2carbon"
+password = "wso2carbon"
+<%} -%>
+<% if $db_conn['db_type'] == 'mssql' { -%>
+[database.identity_db]
+type = "mssql"
+hostname = "<%= $db_conn['db_hostname'] -%>"
+port = "<%= $db_conn['db_port'] -%>"
+name = "<%= $db_conn['db_name'] -%>"
+username = "<%= $db_conn['db_user'] -%>"
+<% if !$use_ccm { -%>
+password = "<%= $db_conn['db_pwd'] -%>"
+<%} else { -%>
+password = "<%%= credential[0] %%>"
+<%} -%>
+<%} -%>
+
+<% if $db_conn['db_type'] == 'h2' { -%>
+[database.shared_db]
+type = "h2"
+url = "jdbc:h2:./repository/database/WSO2SHARED_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
+username = "wso2carbon"
+password = "wso2carbon"
+<%} -%>
+<% if $db_conn['db_type'] == 'mssql' { -%>
+[database.shared_db]
+type = "mssql"
+hostname = "<%= $db_conn['db_hostname'] -%>"
+port = "<%= $db_conn['db_port'] -%>"
+name = "<%= $db_conn['db_name'] -%>"
+username = "<%= $db_conn['db_user'] -%>"
+<% if !$use_ccm { -%>
+password = "<%= $db_conn['db_pwd'] -%>"
+<%} else { -%>
+password = "<%%= credential[0] %%>"
+<%} -%>
+<%} -%>
 
 [keystore.primary]
 name = "wso2carbon.jks"

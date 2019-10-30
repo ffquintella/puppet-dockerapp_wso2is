@@ -532,114 +532,141 @@ if( $version == '5.9.0') {
         }
       }
 
-      ### CHANGE THIS 
-
       if !$use_ccm {
-        file {"${conf_configdir}/datasources/master-datasources.xml":
-          content => epp('dockerapp_wso2is/master-datasources.xml.epp', { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, }),
-          notify  => Docker::Run[$service_name],
-          require => File[$conf_configdir],
-        }
-        file {"${conf_configdir}/datasources/metrics-datasources.xml":
-          content => epp('dockerapp_wso2is/metrics-datasources.xml.epp', { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, }),
-          notify  => Docker::Run[$service_name],
-          require => File[$conf_configdir],
-        }
-        file {"${conf_configdir}/datasources/bps-datasources.xml":
-          content => epp('dockerapp_wso2is/bps-datasources.xml.epp', { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, }),
-          notify  => Docker::Run[$service_name],
-          require => File[$conf_configdir],
-        }
-        file {"${conf_configdir}/user-mgt.xml":
-          content => epp('dockerapp_wso2is/user-mgt.xml.epp', {
-            'adm_user'                    => $adm_user,
-            'adm_pwd'                     => $adm_pwd,
-            'adm_role'                    => $adm_role,
-            'use_ccm'                     => $use_ccm,
-            'use_active_directory'        => $use_active_directory,
-            'ad_server'                   => $ad_server,
-            'ad_port'                     => $ad_port,
-            'ad_use_ssl'                  => $ad_use_ssl,
-            'ad_service_user'             => $ad_service_user,
-            'ad_service_pwd'              => $ad_service_pwd,
-            'ad_user_search_base'         => $ad_user_search_base,
-            'ad_group_search_base'        => $ad_group_search_base,
-            'ad_user_name_search_filter'  => $ad_user_name_search_filter,
-            'ad_user_name_list_filter'    => $ad_user_name_list_filter,
-            'ad_group_name_search_filter' => $ad_group_name_search_filter,
-            'ad_group_name_list_filter'   => $ad_group_name_list_filter,
-            'pwd_java_regex'              => $pwd_java_regex,
-            'pwd_java_script_regex'       => $pwd_java_script_regex,
-            'pwd_violation_msg'           => $pwd_violation_msg,
-            'enable_scim'                 => $enable_scim,
-            }),
-          notify  => Docker::Run[$service_name],
-          require => File[$conf_configdir],
+        if( $version == '5.8.0') {
+          file {"${conf_configdir}/datasources/master-datasources.xml":
+            content => epp('dockerapp_wso2is/master-datasources.xml.epp', { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, }),
+            notify  => Docker::Run[$service_name],
+            require => File[$conf_configdir],
+          }
+          file {"${conf_configdir}/datasources/metrics-datasources.xml":
+            content => epp('dockerapp_wso2is/metrics-datasources.xml.epp', { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, }),
+            notify  => Docker::Run[$service_name],
+            require => File[$conf_configdir],
+          }
+          file {"${conf_configdir}/datasources/bps-datasources.xml":
+            content => epp('dockerapp_wso2is/bps-datasources.xml.epp', { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, }),
+            notify  => Docker::Run[$service_name],
+            require => File[$conf_configdir],
+          }
+          file {"${conf_configdir}/user-mgt.xml":
+            content => epp('dockerapp_wso2is/user-mgt.xml.epp', {
+              'adm_user'                    => $adm_user,
+              'adm_pwd'                     => $adm_pwd,
+              'adm_role'                    => $adm_role,
+              'use_ccm'                     => $use_ccm,
+              'use_active_directory'        => $use_active_directory,
+              'ad_server'                   => $ad_server,
+              'ad_port'                     => $ad_port,
+              'ad_use_ssl'                  => $ad_use_ssl,
+              'ad_service_user'             => $ad_service_user,
+              'ad_service_pwd'              => $ad_service_pwd,
+              'ad_user_search_base'         => $ad_user_search_base,
+              'ad_group_search_base'        => $ad_group_search_base,
+              'ad_user_name_search_filter'  => $ad_user_name_search_filter,
+              'ad_user_name_list_filter'    => $ad_user_name_list_filter,
+              'ad_group_name_search_filter' => $ad_group_name_search_filter,
+              'ad_group_name_list_filter'   => $ad_group_name_list_filter,
+              'pwd_java_regex'              => $pwd_java_regex,
+              'pwd_java_script_regex'       => $pwd_java_script_regex,
+              'pwd_violation_msg'           => $pwd_violation_msg,
+              'enable_scim'                 => $enable_scim,
+              }),
+            notify  => Docker::Run[$service_name],
+            require => File[$conf_configdir],
+          }
+        } else {
+            file { "${conf_configdir}/identity/deployment.toml":
+              content => epp('dockerapp_wso2is/identity/deployment.toml.epp', {
+                'auth_password_recovery' => $auth_password_recovery,
+                'db_conn'                => $dbconn,
+                'use_ccm'                => $use_ccm,
+              }),
+              notify  => Docker::Run[$service_name],
+              require => File[$conf_configdir],
+            }
         }
       }else{
-        ccm_cli::scheduled { 'template-master-datasources.xml':
-          template_content    => base64('encode', epp('dockerapp_wso2is/master-datasources.xml.epp',
-          { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, })),
-          authorization_token => $dbconn['ccm_api_key'],
-          credentials         => [$dbconn['ccm_key']],
-          configurations      => [],
-          ccm_srv_record      => $ccm_srvc,
-          destination_file    => "${conf_configdir}/datasources/master-datasources.xml",
-          environment         => $ccm_environment,
-          notify              => Docker::Run[$service_name],
-        }
-        ccm_cli::scheduled { 'template-metrics-datasources.xml':
-          template_content    => base64('encode', epp('dockerapp_wso2is/metrics-datasources.xml.epp',
-          { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, })),
-          authorization_token => $dbconn['ccm_api_key'],
-          credentials         => [$dbconn['ccm_key']],
-          configurations      => [],
-          ccm_srv_record      => $ccm_srvc,
-          destination_file    => "${conf_configdir}/datasources/metrics-datasources.xml",
-          environment         => $ccm_environment,
-          notify              => Docker::Run[$service_name],
-        }
-        ccm_cli::scheduled { 'template-bps-datasources.xml':
-          template_content    => base64('encode', epp('dockerapp_wso2is/bps-datasources.xml.epp',
-          { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, })),
-          authorization_token => $dbconn['ccm_api_key'],
-          credentials         => [$dbconn['ccm_key']],
-          configurations      => [],
-          ccm_srv_record      => $ccm_srvc,
-          destination_file    => "${conf_configdir}/datasources/bps-datasources.xml",
-          environment         => $ccm_environment,
-          notify              => Docker::Run[$service_name],
-        }
-        ccm_cli::scheduled { 'user-mgt.xml':
-          template_content    => base64('encode', epp('dockerapp_wso2is/user-mgt.xml.epp', {
-            'adm_user'                    => $adm_user,
-            'adm_pwd'                     => $adm_pwd,
-            'adm_role'                    => $adm_role,
-            'use_ccm'                     => $use_ccm,
-            'use_active_directory'        => $use_active_directory,
-            'ad_server'                   => $ad_server,
-            'ad_port'                     => $ad_port,
-            'ad_use_ssl'                  => $ad_use_ssl,
-            'ad_service_user'             => $ad_service_user,
-            'ad_service_pwd'              => $ad_service_pwd,
-            'ad_user_search_base'         => $ad_user_search_base,
-            'ad_group_search_base'        => $ad_group_search_base,
-            'ad_user_name_search_filter'  => $ad_user_name_search_filter,
-            'ad_user_name_list_filter'    => $ad_user_name_list_filter,
-            'ad_group_name_search_filter' => $ad_group_name_search_filter,
-            'ad_group_name_list_filter'   => $ad_group_name_list_filter,
-            'pwd_java_regex'              => $pwd_java_regex,
-            'pwd_java_script_regex'       => $pwd_java_script_regex,
-            'pwd_violation_msg'           => $pwd_violation_msg,
-            'enable_scim'                 => $enable_scim,
-            })),
-          authorization_token => $dbconn['ccm_api_key'],
-          credentials         => [$ad_service_ccm_key],
-          configurations      => [],
-          ccm_srv_record      => $ccm_srvc,
-          destination_file    => "${conf_configdir}/user-mgt.xml",
-          environment         => $ccm_environment,
-          notify              => Docker::Run[$service_name],
+        if( $version == '5.8.0') {
+          ccm_cli::scheduled { 'template-master-datasources.xml':
+            template_content    => base64('encode', epp('dockerapp_wso2is/master-datasources.xml.epp',
+            { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, })),
+            authorization_token => $dbconn['ccm_api_key'],
+            credentials         => [$dbconn['ccm_key']],
+            configurations      => [],
+            ccm_srv_record      => $ccm_srvc,
+            destination_file    => "${conf_configdir}/datasources/master-datasources.xml",
+            environment         => $ccm_environment,
+            notify              => Docker::Run[$service_name],
+          }
+          ccm_cli::scheduled { 'template-metrics-datasources.xml':
+            template_content    => base64('encode', epp('dockerapp_wso2is/metrics-datasources.xml.epp',
+            { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, })),
+            authorization_token => $dbconn['ccm_api_key'],
+            credentials         => [$dbconn['ccm_key']],
+            configurations      => [],
+            ccm_srv_record      => $ccm_srvc,
+            destination_file    => "${conf_configdir}/datasources/metrics-datasources.xml",
+            environment         => $ccm_environment,
+            notify              => Docker::Run[$service_name],
+          }
+          ccm_cli::scheduled { 'template-bps-datasources.xml':
+            template_content    => base64('encode', epp('dockerapp_wso2is/bps-datasources.xml.epp',
+            { 'db_conn' => $dbconn, 'use_ccm' => $use_ccm, })),
+            authorization_token => $dbconn['ccm_api_key'],
+            credentials         => [$dbconn['ccm_key']],
+            configurations      => [],
+            ccm_srv_record      => $ccm_srvc,
+            destination_file    => "${conf_configdir}/datasources/bps-datasources.xml",
+            environment         => $ccm_environment,
+            notify              => Docker::Run[$service_name],
+          }
+          ccm_cli::scheduled { 'user-mgt.xml':
+            template_content    => base64('encode', epp('dockerapp_wso2is/user-mgt.xml.epp', {
+              'adm_user'                    => $adm_user,
+              'adm_pwd'                     => $adm_pwd,
+              'adm_role'                    => $adm_role,
+              'use_ccm'                     => $use_ccm,
+              'use_active_directory'        => $use_active_directory,
+              'ad_server'                   => $ad_server,
+              'ad_port'                     => $ad_port,
+              'ad_use_ssl'                  => $ad_use_ssl,
+              'ad_service_user'             => $ad_service_user,
+              'ad_service_pwd'              => $ad_service_pwd,
+              'ad_user_search_base'         => $ad_user_search_base,
+              'ad_group_search_base'        => $ad_group_search_base,
+              'ad_user_name_search_filter'  => $ad_user_name_search_filter,
+              'ad_user_name_list_filter'    => $ad_user_name_list_filter,
+              'ad_group_name_search_filter' => $ad_group_name_search_filter,
+              'ad_group_name_list_filter'   => $ad_group_name_list_filter,
+              'pwd_java_regex'              => $pwd_java_regex,
+              'pwd_java_script_regex'       => $pwd_java_script_regex,
+              'pwd_violation_msg'           => $pwd_violation_msg,
+              'enable_scim'                 => $enable_scim,
+              })),
+            authorization_token => $dbconn['ccm_api_key'],
+            credentials         => [$ad_service_ccm_key],
+            configurations      => [],
+            ccm_srv_record      => $ccm_srvc,
+            destination_file    => "${conf_configdir}/user-mgt.xml",
+            environment         => $ccm_environment,
+            notify              => Docker::Run[$service_name],
+          }
+        } else {
+            ccm_cli::scheduled { "identity_deployment.toml":
+              template_content    => base64('encode', epp('dockerapp_wso2is/identity/deployment.toml.epp', {
+                'auth_password_recovery' => $auth_password_recovery,
+                'db_conn'                => $dbconn,
+                'use_ccm'                => $use_ccm,
+              })),
+              authorization_token => $dbconn['ccm_api_key'],
+              credentials         => [$ad_service_ccm_key],
+              configurations      => [],
+              ccm_srv_record      => $ccm_srvc,
+              destination_file    => "${conf_configdir}/identity/deployment.toml",
+              environment         => $ccm_environment,
+              notify              => Docker::Run[$service_name],
+            }
         }
       }
 
@@ -766,14 +793,6 @@ if( $version == '5.9.0') {
         notify  => Docker::Run[$service_name],
         require => File[$conf_configdir],
       }
-    }
-  }else{
-    file {"${conf_configdir}/identity/deployment.toml":
-      content => epp('dockerapp_wso2is/identity/deployment.toml.epp',
-        { 'auth_password_recovery' => $auth_password_recovery,
-      }),
-      notify  => Docker::Run[$service_name],
-      require => File[$conf_configdir],
     }
   }
 
