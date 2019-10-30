@@ -113,7 +113,7 @@ read_timeout = ""
 retry_attempts = ""
 start_tls_enabled = false
 
- <% } -%>
+<% } -%>
 
 ## DATABASE
 
