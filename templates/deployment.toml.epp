@@ -43,13 +43,6 @@ base_path = "https://$ref{server.hostname}:${carbon.management.port}"
 
 #### User STORE
 
-#[user_store]
-#type = "read_write_ldap"
-#connection_url = "ldap://localhost:${Ports.EmbeddedLDAP.LDAPServerPort}"
-#connection_name = "uid=admin,ou=system"
-#connection_password = "admin"
-#base_dn = "dc=wso2,dc=org"      #refers the base dn on which the user and group search bases will be generated
-
 <% if $use_active_directory == true { -%>
 
 [user_store.properties]
@@ -82,14 +75,14 @@ membership_attribute = "member"
 member_of_attribute = "memeberOf"
 back_links_enabled = false
 referral = "follow"
-username_java_regex = "[a-zA-Z0-9._\-|//]{3,30}$"
-username_javascript_regex = "^[\S]{3,30}$"
+username_java_regex = '[a-zA-Z0-9._\-|//]{3,30}$'
+username_javascript_regex = '^[\S]{3,30}$'
 username_java_regex_violation_error_msg = "Username pattern policy violated"
-password_java_regex = "<%= $pwd_java_regex -%>"
-password_javascript_regex = "<%= $pwd_java_script_regex -%>"
+password_java_regex = '<%= $pwd_java_regex -%>'
+password_javascript_regex = '<%= $pwd_java_script_regex -%>'
 password_java_regex_violation_error_msg = "<%= $pwd_violation_msg -%>"
-rolename_java_regex = "[a-zA-Z0-9._\-|//]{3,30}$"
-rolename_javascript_regex = "^[\S]{3,30}$"
+rolename_java_regex = '[a-zA-Z0-9._\-|//]{3,30}$'
+rolename_javascript_regex = '^[\S]{3,30}$'
 <% if $enable_scim == false { -%>
 scim_enabled = false
 <% } else { -%>
@@ -103,7 +96,7 @@ is_adlds_role = false
 user_account_control = "512"
 max_user_name_list_length = "100"
 max_role_name_list_length = "100"
-membership_attribute_range = 1500
+membership_attribute_range = "1500"
 kdc_enabled = false
 default_realm_name = "WSO2.ORG"
 user_roles_cache_enabled = true
