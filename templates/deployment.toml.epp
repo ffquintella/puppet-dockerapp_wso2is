@@ -45,9 +45,8 @@ create_admin_account = false
 
 <% if $use_active_directory == true { -%>
 
-[user_store.properties]
+[user_store]
 class = "org.wso2.carbon.user.core.ldap.ActiveDirectoryUserStoreManager"
-tenant_manager = "org.wso2.carbon.user.core.tenant.CommonHybridLDAPTenantManager"
 <% if $ad_use_ssl == true { -%>
 connection_url = "ldaps://<%= $ad_server -%>:<%= $ad_port -%>"
 <% } else { -%>
@@ -107,6 +106,8 @@ read_timeout = ""
 retry_attempts = ""
 start_tls_enabled = false
 
+[user_store.properties]
+TenantManager = "org.wso2.carbon.user.core.tenant.CommonHybridLDAPTenantManager"
 <% } -%>
 
 ## DATABASE
