@@ -46,9 +46,9 @@ password = "wso2carbon"
 ####
 
 [authentication.endpoints] 
-login_url=<%= $auth_endpoint %>
-retry_url=<%= $auth_endpoint_retry %>
-request_missing_claims_url=<%= $auth_endpoint_claims %>
+login_url="<%= $auth_endpoint %>"
+retry_url="<%= $auth_endpoint_retry %>"
+request_missing_claims_url="<%= $auth_endpoint_claims %>"
 
 <% if $enable_ha == true { -%>
 [clustering]
