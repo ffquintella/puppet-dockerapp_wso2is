@@ -54,9 +54,9 @@ connection_url = "ldap://<%= $ad_server -%>:<%= $ad_port -%>"
 <% } -%>
 connection_name = "<%= $ad_service_user -%>"
 <% if $use_ccm == false { -%>
-connection_password = "$secret{<%= $ad_service_pwd -%>}"
+connection_password = "<%= $ad_service_pwd -%>"
 <% } else { -%>
-connection_password = "$secret{<%%= credential[0] %%>}"
+connection_password = "<%%= credential[0] %%>"
 <% } -%>
 user_search_base = "<%= $ad_user_search_base -%>"
 user_entry_object_class = "user"
