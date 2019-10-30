@@ -351,21 +351,6 @@ if( $version == '5.9.0') {
     require => File[$conf_configdir],
   }
 
-  file {"${conf_configdir}/deployment.toml":
-    content => epp('dockerapp_wso2is/deployment.toml.epp', {
-        'auth_endpoint'        => $external_auth_endpoint,
-        'auth_endpoint_retry'  => $external_auth_endpoint_retry,
-        'auth_endpoint_claims' => $external_auth_endpoint_claims,
-        'enable_ha'            => $enable_ha,
-        'cluster_name'         => $ha_cluster_name,
-        'ha_members'           => $ha_members,
-        'ip_address'           => $::networking['interfaces']['eth0']['ip'],
-        'hostname'             => $is_fqdn
-      }),
-    notify  => Docker::Run[$service_name],
-    require => File[$conf_configdir],
-  }
-
 } else {
 
   exec { "${service_name}-copy-configs":
@@ -576,11 +561,27 @@ if( $version == '5.9.0') {
             require => File[$conf_configdir],
           }
         } else {
+
+            file {"${conf_configdir}/deployment.toml":
+              content => epp('dockerapp_wso2is/deployment.toml.epp', {
+                  'auth_endpoint'        => $external_auth_endpoint,
+                  'auth_endpoint_retry'  => $external_auth_endpoint_retry,
+                  'auth_endpoint_claims' => $external_auth_endpoint_claims,
+                  'enable_ha'            => $enable_ha,
+                  'cluster_name'         => $ha_cluster_name,
+                  'ha_members'           => $ha_members,
+                  'ip_address'           => $::networking['interfaces']['eth0']['ip'],
+                  'hostname'             => $is_fqdn,
+                  'db_conn'              => $dbconn,
+                  'use_ccm'              => $use_ccm,
+                }),
+              notify  => Docker::Run[$service_name],
+              require => File[$conf_configdir],
+            }
+
             file { "${conf_configdir}/identity/deployment.toml":
               content => epp('dockerapp_wso2is/identity/deployment.toml.epp', {
                 'auth_password_recovery' => $auth_password_recovery,
-                'db_conn'                => $dbconn,
-                'use_ccm'                => $use_ccm,
               }),
               notify  => Docker::Run[$service_name],
               require => File[$conf_configdir],
@@ -653,11 +654,31 @@ if( $version == '5.9.0') {
             notify              => Docker::Run[$service_name],
           }
         } else {
+            ccm_cli::scheduled { "deployment.toml":
+              template_content    => base64('encode', epp('dockerapp_wso2is/deployment.toml.epp', {
+                  'auth_endpoint'        => $external_auth_endpoint,
+                  'auth_endpoint_retry'  => $external_auth_endpoint_retry,
+                  'auth_endpoint_claims' => $external_auth_endpoint_claims,
+                  'enable_ha'            => $enable_ha,
+                  'cluster_name'         => $ha_cluster_name,
+                  'ha_members'           => $ha_members,
+                  'ip_address'           => $::networking['interfaces']['eth0']['ip'],
+                  'hostname'             => $is_fqdn,
+                  'db_conn'              => $dbconn,
+                  'use_ccm'              => $use_ccm,
+              })),
+              authorization_token => $dbconn['ccm_api_key'],
+              credentials         => [$ad_service_ccm_key],
+              configurations      => [],
+              ccm_srv_record      => $ccm_srvc,
+              destination_file    => "${conf_configdir}/deployment.toml",
+              environment         => $ccm_environment,
+              notify              => Docker::Run[$service_name],
+            }
+
             ccm_cli::scheduled { "identity_deployment.toml":
               template_content    => base64('encode', epp('dockerapp_wso2is/identity/deployment.toml.epp', {
                 'auth_password_recovery' => $auth_password_recovery,
-                'db_conn'                => $dbconn,
-                'use_ccm'                => $use_ccm,
               })),
               authorization_token => $dbconn['ccm_api_key'],
               credentials         => [$ad_service_ccm_key],

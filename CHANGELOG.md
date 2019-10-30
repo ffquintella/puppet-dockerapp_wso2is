@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.3.7
+
+deplyment.toml support increase
+
+**Bugfixes**
+- Fix deployment.toml bug
+
 ## Release 1.3.6
 
 deplyment.toml support increase
