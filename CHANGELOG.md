@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.3.8
+
+deplyment.toml support increase
+
+**Features**
+- databases support in deployment.toml
+
 ## Release 1.3.7
 
 deplyment.toml support increase
