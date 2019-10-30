@@ -47,6 +47,7 @@ create_admin_account = false
 
 [user_store.properties]
 class = "org.wso2.carbon.user.core.ldap.ActiveDirectoryUserStoreManager"
+TenantManager = "org.wso2.carbon.user.core.tenant.CommonHybridLDAPTenantManager"
 <% if $ad_use_ssl == true { -%>
 connection_url = "ldaps://<%= $ad_server -%>:<%= $ad_port -%>"
 <% } else { -%>

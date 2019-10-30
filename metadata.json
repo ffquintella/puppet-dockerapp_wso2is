@@ -1,6 +1,6 @@
 {
   "name": "ffquintella-dockerapp_wso2is",
-  "version": "1.3.12",
+  "version": "1.3.13",
   "author": "Felipe Quintella",
   "summary": "This module install wso2 Identity Server using docker.",
   "license": "GPL-3.0",
