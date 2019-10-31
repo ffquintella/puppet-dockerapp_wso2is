@@ -37,8 +37,9 @@ node_ip = "<%= $ip_address -%>"
 base_path = "https://$ref{server.hostname}:${carbon.management.port}"
 
 [super_admin]
-username = "admin"
+username = "<%= $adm_user -%>"
 password = "wso2Default4count!"
+admin_role = "<%= $adm_role -%>"
 create_admin_account = false
 
 #### User STORE
