@@ -665,7 +665,7 @@ if( $version == '5.9.0') {
               'enable_scim'                 => $enable_scim,
               })),
             authorization_token => $dbconn['ccm_api_key'],
-            credentials         => [$ad_service_ccm_key],
+            credentials         => [$ad_service_ccm_key, $dbconn['ccm_key']],
             configurations      => [],
             ccm_srv_record      => $ccm_srvc,
             destination_file    => "${conf_configdir}/user-mgt.xml",

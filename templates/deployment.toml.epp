@@ -132,7 +132,7 @@ username = "<%= $db_conn['db_user'] -%>"
 <% if !$use_ccm { -%>
 password = "<%= $db_conn['db_pwd'] -%>"
 <%} else { -%>
-password = "<%%= credential[0] %%>"
+password = "<%%= credential[1] %%>"
 <%} -%>
 
 [database.identity_db.pool_options]
@@ -163,7 +163,7 @@ username = "<%= $db_conn['db_user'] -%>"
 <% if !$use_ccm { -%>
 password = "<%= $db_conn['db_pwd'] -%>"
 <%} else { -%>
-password = "<%%= credential[0] %%>"
+password = "<%%= credential[1] %%>"
 <%} -%>
 
 [database.shared_db.pool_options]
@@ -184,7 +184,7 @@ username = "<%= $db_conn['db_user'] -%>"
 <% if !$use_ccm { -%>
 password = "<%= $db_conn['db_pwd'] -%>"
 <%} else { -%>
-password = "<%%= credential[0] %%>"
+password = "<%%= credential[1] %%>"
 <%} -%>
 driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
 <%} -%>
