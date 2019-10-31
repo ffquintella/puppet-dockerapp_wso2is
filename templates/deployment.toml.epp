@@ -190,10 +190,6 @@ password = "<%%= credential[1] %%>"
 driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
 <%} -%>
 
-[keystore.primary]
-name = "wso2carbon.jks"
-password = "wso2carbon"
-
 
 ####
 
@@ -207,12 +203,20 @@ request_missing_claims_url="<%= $auth_endpoint_claims %>"
 [transport.http]
 port = "80"
 
-[transport.https]
+[transport.https.properties]
 proxyPort="443" 
 sslProtocol="TLS"
 sslEnabledProtocols="TLSv1,TLSv1.1,TLSv1.2"
 maxHttpHeaderSize="8192"
 scheme="https"
+
+####
+
+## KEYSTORE
+
+[keystore.primary]
+name = "wso2carbon.jks"
+password = "wso2carbon"
 
 ####
 
