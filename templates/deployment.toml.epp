@@ -202,6 +202,22 @@ login_url="<%= $auth_endpoint %>"
 retry_url="<%= $auth_endpoint_retry %>"
 request_missing_claims_url="<%= $auth_endpoint_claims %>"
 
+## Transport
+
+[transport.http]
+port = "80"
+
+[transport.https]
+proxyPort="443" 
+sslProtocol="TLS"
+sslEnabledProtocols="TLSv1,TLSv1.1,TLSv1.2"
+maxHttpHeaderSize="8192"
+scheme="https"
+
+####
+
+## CLUSTERING
+
 <% if $enable_ha == true { -%>
 [clustering]
 membership_scheme = "wka"
@@ -215,11 +231,8 @@ members = [
 <% } -%>
 
 
-[transport.http]
-port = "80"
+####
 
-[transport.https]
-proxyPort = "443" 
 
 [event.default_listener.application_authentication]
 priority = "11"
