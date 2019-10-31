@@ -207,7 +207,13 @@ request_missing_claims_url="<%= $auth_endpoint_claims %>"
 membership_scheme = "wka"
 local_member_host = "<%= $ip_address -%>"
 local_member_port = "4000"
+members = [
+  <% $ha_members.each |$member| { -%>
+    "<%= $member -%>:4000",
+  <% } -%>
+]
 <% } -%>
+
 
 [transport.http]
 port = "80"
