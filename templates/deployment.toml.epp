@@ -112,6 +112,9 @@ TenantManager = "org.wso2.carbon.user.core.tenant.CommonHybridLDAPTenantManager"
 
 ## DATABASE
 
+[database_configuration]
+enable_h2_console = "false"
+
 <% if $db_conn['db_type'] == 'h2' { -%>
 [database.identity_db]
 type = "h2"
@@ -131,6 +134,16 @@ password = "<%= $db_conn['db_pwd'] -%>"
 <%} else { -%>
 password = "<%%= credential[0] %%>"
 <%} -%>
+
+[database.identity_db.pool_options]
+maxActive = "80"
+maxWait = "60000"
+minIdle = "5"
+testOnBorrow = true
+validationQuery="SELECT 1"
+validationInterval="30000"
+defaultAutoCommit="false"
+commitOnReturn="true"
 <%} -%>
 
 <% if $db_conn['db_type'] == 'h2' { -%>
@@ -152,6 +165,28 @@ password = "<%= $db_conn['db_pwd'] -%>"
 <%} else { -%>
 password = "<%%= credential[0] %%>"
 <%} -%>
+
+[database.shared_db.pool_options]
+maxActive = "80"
+maxWait = "60000"
+minIdle = "5"
+testOnBorrow = true
+validationQuery="SELECT 1"
+validationInterval="30000"
+defaultAutoCommit="false"
+commitOnReturn="true"
+<%} -%>
+
+<% if $db_conn['db_type'] == 'mssql' { -%>
+[bps_database.config]
+url = "jdbc:sqlserver://<%= $db_conn['db_hostname'] -%>:<%= $db_conn['db_port'] -%>;databaseName=<%= $db_conn['db_name'] -%>;SendStringParametersAsUnicode=false"
+username = "<%= $db_conn['db_user'] -%>"
+<% if !$use_ccm { -%>
+password = "<%= $db_conn['db_pwd'] -%>"
+<%} else { -%>
+password = "<%%= credential[0] %%>"
+<%} -%>
+driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
 <%} -%>
 
 [keystore.primary]
