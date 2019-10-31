@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.3.21
+
+deplyment.toml support increase
+
+**Bugfixes**
+- Fix in log config
+
 ## Release 1.3.20
 
 deplyment.toml support increase

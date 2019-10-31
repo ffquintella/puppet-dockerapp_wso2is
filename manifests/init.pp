@@ -811,6 +811,16 @@ if( $version == '5.9.0') {
           notify  => Docker::Run[$service_name],
           require => File[$conf_configdir],
         }
+      } else {
+        file {"${conf_configdir}/log4j2.properties":
+          content => epp('dockerapp_wso2is/log4j2.properties.epp', {
+            'master_log_level'         => $master_log_level,
+            'authentication_log_level' => $authentication_log_level,
+            'identity_log_level'       => $identity_log_level,
+            }),
+          notify  => Docker::Run[$service_name],
+          require => File[$conf_configdir],
+        }
       }
 
       if $db_jdbc_driver =~ /(.*\/)(.*)[-_].*\.jar/ {
