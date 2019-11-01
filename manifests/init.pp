@@ -883,6 +883,11 @@ if( $version == '5.9.0') {
       owner  => $dir_owner,
       group  => $dir_group,
     }
+    file{ "${alternate_deployment_dir}/client":
+      ensure => directory,
+      owner  => $dir_owner,
+      group  => $dir_group,
+    }
     if ($version == '5.8.0') {
       file{ "${alternate_deployment_dir}/server/webapps":
         ensure => directory,
@@ -934,6 +939,11 @@ if( $version == '5.9.0') {
     ]
   }else{
     file{ "${conf_datadir}/deployment":
+      ensure => directory,
+      owner  => $dir_owner,
+      group  => $dir_group,
+    }
+    ->file{ "${conf_datadir}/client":
       ensure => directory,
       owner  => $dir_owner,
       group  => $dir_group,
