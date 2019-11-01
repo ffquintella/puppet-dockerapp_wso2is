@@ -911,6 +911,7 @@ if( $version == '5.9.0') {
     $volumes = [
       "${alternate_deployment_dir}:/home/wso2carbon/wso2is-${version}/repository/deployment",
       "${alternate_tenants_dir}:/home/wso2carbon/wso2is-${version}/repository/tenants",
+      "${conf_libdir}/libs:/home/wso2carbon/wso2is-${version}/lib",
       "${conf_datadir}/directory:/home/wso2carbon/wso2is-${version}/repository/data/org.wso2.carbon.directory",
       "${conf_datadir}/database:/home/wso2carbon/wso2is-${version}/repository/database",
       "${conf_datadir}/repository-resources-security:/home/wso2carbon/wso2is-${version}/repository/resources/security",
@@ -963,6 +964,7 @@ if( $version == '5.9.0') {
       }
     }
     $volumes = [
+      "${conf_libdir}/libs:/home/wso2carbon/wso2is-${version}/lib",
       "${conf_datadir}/deployment:/home/wso2carbon/wso2is-${version}/repository/deployment",
       "${conf_datadir}/directory:/home/wso2carbon/wso2is-${version}/repository/data/org.wso2.carbon.directory",
       "${conf_datadir}/database:/home/wso2carbon/wso2is-${version}/repository/database",
