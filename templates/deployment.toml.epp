@@ -204,11 +204,7 @@ request_missing_claims_url="<%= $auth_endpoint_claims %>"
 port = "80"
 
 [transport.https.properties]
-proxyPort="443" 
-sslProtocol="TLS"
-sslEnabledProtocols="TLSv1,TLSv1.1,TLSv1.2"
-maxHttpHeaderSize="8192"
-scheme="https"
+proxyPort="443"
 
 ####
 
