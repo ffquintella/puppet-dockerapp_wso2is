@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.3.27
+
+deplyment.toml support increase
+
+**Bugfixes**
+- deployment dirs
+
+## Release 1.3.26
+
+deplyment.toml support increase
+
+**Features**
+- opening port 9999
+
 ## Release 1.3.25
 
 deplyment.toml support increase

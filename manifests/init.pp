@@ -203,7 +203,7 @@
 class dockerapp_wso2is (
   String $service_name = 'wso2is',
   String $version = '5.8.0',
-  Array $ports = ['9443:9443','9763:9763', '4000:4000'],
+  Array $ports = ['9443:9443','9763:9763', '9999:9999', '4000:4000'],
   Array $dropins = [],
   String $db_type = 'embeded',
   String $db_dbms = 'mssql',
@@ -907,6 +907,17 @@ if( $version == '5.9.0') {
             'cors_domains' => $cors_domains,
           }),
       }
+    }else{
+      exec { "${service_name}-copy-deployment-server-data":
+        command => "/usr/bin/docker run --rm --name=${service_name}_tmp -v${alternate_deployment_dir}/server:/dest_dir --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/deployment/server/* /dest_dir\"",
+        creates => "${alternate_deployment_dir}/server/wso2.war",
+        require => File["${alternate_deployment_dir}/server"],
+      }
+      exec { "${service_name}-copy-deployment-client-data":
+        command => "/usr/bin/docker run --rm --name=${service_name}_tmp -v${alternate_deployment_dir}/client:/dest_dir --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/deployment/client/* /dest_dir\"",
+        creates => "${alternate_deployment_dir}/client/modules/wso2.war",
+        require => File["${alternate_deployment_dir}/client"],
+      }
     }
     $volumes = [
       "${alternate_deployment_dir}:/home/wso2carbon/wso2is-${version}/repository/deployment",
@@ -961,6 +972,17 @@ if( $version == '5.9.0') {
         content => epp('dockerapp_wso2is/oauth/web.xml.epp', {
             'cors_domains' => $cors_domains,
           }),
+      }
+    }else{
+      exec { "${service_name}-copy-deployment-server-data":
+        command => "/usr/bin/docker run --rm --name=${service_name}_tmp -v${conf_datadir}/deployment/server:/dest_dir --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/deployment/server/* /dest_dir\"",
+        creates => "${conf_datadir}/deployment/server/wso2.war",
+        require => File["${conf_datadir}/deployment/server"],
+      }
+      exec { "${service_name}-copy-deployment-client-data":
+        command => "/usr/bin/docker run --rm --name=${service_name}_tmp -v${conf_datadir}/deployment/client:/dest_dir --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/deployment/client/* /dest_dir\"",
+        creates => "${conf_datadir}/deployment/client/modules/wso2.war",
+        require => File["${conf_datadir}/deployment/client"],
       }
     }
     $volumes = [
