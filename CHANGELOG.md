@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.3.25
+
+deplyment.toml support increase
+
+**Features**
+- sharing main libs dir
+
+**Bugfixes**
+- Fix oauth share
+
 ## Release 1.3.24
 
 deplyment.toml support increase

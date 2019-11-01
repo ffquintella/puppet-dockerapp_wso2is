@@ -301,6 +301,12 @@ class dockerapp_wso2is (
     group  => $dir_group,
   }
 
+  file{ "${conf_libdir}/libs":
+    ensure => directory,
+    owner  => $dir_owner,
+    group  => $dir_group,
+  }
+
   file{ "${conf_datadir}/db-scripts":
     ensure => directory,
     owner  => $dir_owner,
@@ -349,6 +355,12 @@ if( $version == '5.9.0') {
     command => "/usr/bin/docker run --rm --name=${service_name}_tmp -v ${conf_configdir}:/conf_dest --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/conf/* /conf_dest\"",
     creates => "${conf_configdir}/metrics.xml",
     require => File[$conf_configdir],
+  }
+
+  exec { "${service_name}-copy-libs":
+    command => "/usr/bin/docker run --rm --name=${service_name}_cp_libs -v ${conf_libdir}/libs:/conf_dest --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/lib/* /conf_dest\"",
+    creates => "${conf_libdir}/lib/README.txt",
+    require => File["${conf_libdir}/libs"],
   }
 
 } else {
@@ -865,33 +877,36 @@ if( $version == '5.9.0') {
     }
   }
 
-  if( $use_alternate_dirs == true  ){
+  if ( $use_alternate_dirs == true ) {
     file{ "${alternate_deployment_dir}/server":
       ensure => directory,
       owner  => $dir_owner,
       group  => $dir_group,
     }
-    ->file{ "${alternate_deployment_dir}/server/webapps":
-      ensure => directory,
-      owner  => $dir_owner,
-      group  => $dir_group,
-    }
-    ->file{ "${alternate_deployment_dir}/server/webapps/oauth2":
-      ensure => directory,
-      owner  => $dir_owner,
-      group  => $dir_group,
-    }
-    ->file{ "${alternate_deployment_dir}/server/webapps/oauth2/WEB-INF":
-      ensure => directory,
-      owner  => $dir_owner,
-      group  => $dir_group,
-    }
-    ->file{ "${alternate_deployment_dir}/server/webapps/oauth2/WEB-INF/web.xml":
-      owner   => $dir_owner,
-      group   => $dir_group,
-      content => epp('dockerapp_wso2is/oauth/web.xml.epp', {
-          'cors_domains' => $cors_domains,
-        }),
+    if ($version == '5.8.0') {
+      file{ "${alternate_deployment_dir}/server/webapps":
+        ensure => directory,
+        owner  => $dir_owner,
+        group  => $dir_group,
+        require => File["${alternate_deployment_dir}/server"],
+      }
+      ->file{ "${alternate_deployment_dir}/server/webapps/oauth2":
+        ensure => directory,
+        owner  => $dir_owner,
+        group  => $dir_group,
+      }
+      ->file{ "${alternate_deployment_dir}/server/webapps/oauth2/WEB-INF":
+        ensure => directory,
+        owner  => $dir_owner,
+        group  => $dir_group,
+      }
+      ->file{ "${alternate_deployment_dir}/server/webapps/oauth2/WEB-INF/web.xml":
+        owner   => $dir_owner,
+        group   => $dir_group,
+        content => epp('dockerapp_wso2is/oauth/web.xml.epp', {
+            'cors_domains' => $cors_domains,
+          }),
+      }
     }
     $volumes = [
       "${alternate_deployment_dir}:/home/wso2carbon/wso2is-${version}/repository/deployment",
@@ -922,27 +937,30 @@ if( $version == '5.9.0') {
       owner  => $dir_owner,
       group  => $dir_group,
     }
-    ->file{ "${conf_datadir}/deployment/server/webapps":
-      ensure => directory,
-      owner  => $dir_owner,
-      group  => $dir_group,
-    }
-    ->file{ "${conf_datadir}/deployment/server/webapps/oauth2":
-      ensure => directory,
-      owner  => $dir_owner,
-      group  => $dir_group,
-    }
-    ->file{ "${conf_datadir}/deployment/server/webapps/oauth2/WEB-INF":
-      ensure => directory,
-      owner  => $dir_owner,
-      group  => $dir_group,
-    }
-    ->file{ "${conf_datadir}/deployment/server/webapps/oauth2/WEB-INF/web.xml":
-      owner   => $dir_owner,
-      group   => $dir_group,
-      content => epp('dockerapp_wso2is/oauth/web.xml.epp', {
-          'cors_domains' => $cors_domains,
-        }),
+    if($version == '5.8.0') {
+      file{ "${conf_datadir}/deployment/server/webapps":
+        ensure  => directory,
+        owner   => $dir_owner,
+        group   => $dir_group,
+        require => File["${conf_datadir}/deployment/server"]
+      }
+      ->file{ "${conf_datadir}/deployment/server/webapps/oauth2":
+        ensure => directory,
+        owner  => $dir_owner,
+        group  => $dir_group,
+      }
+      ->file{ "${conf_datadir}/deployment/server/webapps/oauth2/WEB-INF":
+        ensure => directory,
+        owner  => $dir_owner,
+        group  => $dir_group,
+      }
+      ->file{ "${conf_datadir}/deployment/server/webapps/oauth2/WEB-INF/web.xml":
+        owner   => $dir_owner,
+        group   => $dir_group,
+        content => epp('dockerapp_wso2is/oauth/web.xml.epp', {
+            'cors_domains' => $cors_domains,
+          }),
+      }
     }
     $volumes = [
       "${conf_datadir}/deployment:/home/wso2carbon/wso2is-${version}/repository/deployment",
