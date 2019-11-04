@@ -203,7 +203,7 @@
 class dockerapp_wso2is (
   String $service_name = 'wso2is',
   String $version = '5.8.0',
-  Array $ports = ['9443:9443','9763:9763', '9999:9999', '4000:4000'],
+  Array $ports = ['9443:9443','9763:9763', '9999:9999', '4000:4000', '7612:7612', '7712:7712', '9612:9612', '9712:9712'],
   Array $dropins = [],
   String $db_type = 'embeded',
   String $db_dbms = 'mssql',
