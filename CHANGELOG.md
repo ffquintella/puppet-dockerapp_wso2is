@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.3.31
+
+5.9.0 migration and deplyment.toml support increase
+
+**Features**
+- adding email support in deployment.toml
+
 ## Release 1.3.30
 
 5.9.0 migration and deplyment.toml support increase
