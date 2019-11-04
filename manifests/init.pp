@@ -359,8 +359,14 @@ if( $version == '5.9.0') {
 
   exec { "${service_name}-copy-libs":
     command => "/usr/bin/docker run --rm --name=${service_name}_cp_libs -v ${conf_libdir}/libs:/conf_dest --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/lib/* /conf_dest\"",
-    creates => "${conf_libdir}/lib/README.txt",
+    creates => "${conf_libdir}/libs/README.txt",
     require => File["${conf_libdir}/libs"],
+  }
+  
+  exec { "${service_name}-copy-dropins":
+    command => "/usr/bin/docker run --rm --name=${service_name}_cp_dropins -v ${conf_libdir}/dropins:/conf_dest --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/components/dropins/* /conf_dest\"",
+    creates => "${conf_libdir}/dropins/kubernetes-membership-scheme-1.0.5.jar",
+    require => File["${conf_libdir}/dropins"],
   }
 
 } else {
@@ -371,13 +377,15 @@ if( $version == '5.9.0') {
     require => File[$conf_configdir],
   }
 
-}
-
   exec { "${service_name}-copy-dropins":
     command => "/usr/bin/docker run --rm --name=${service_name}_cp_dropins -v ${conf_libdir}/dropins:/conf_dest --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/components/dropins/* /conf_dest\"",
     creates => "${conf_libdir}/dropins/org.wso2.carbon.logging.propfile_1.0.0.jar",
     require => File["${conf_libdir}/dropins"],
   }
+
+}
+
+
 
   exec { "${service_name}-copy-security":
     command => "/usr/bin/docker run --rm --name=${service_name}_cp_dropins -v ${conf_datadir}/repository-resources-security:/conf_dest --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/resources/security/* /conf_dest\"",
@@ -915,12 +923,12 @@ if( $version == '5.9.0') {
     }else{
       exec { "${service_name}-copy-deployment-server-data":
         command => "/usr/bin/docker run --rm --name=${service_name}_tmp -v${alternate_deployment_dir}/server:/dest_dir --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/deployment/server/* /dest_dir\"",
-        creates => "${alternate_deployment_dir}/server/wso2.war",
+        creates => "${alternate_deployment_dir}/server/webapps/wso2.war",
         require => File["${alternate_deployment_dir}/server"],
       }
       exec { "${service_name}-copy-deployment-client-data":
         command => "/usr/bin/docker run --rm --name=${service_name}_tmp -v${alternate_deployment_dir}/client:/dest_dir --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/deployment/client/* /dest_dir\"",
-        creates => "${alternate_deployment_dir}/client/modules/wso2.war",
+        creates => "${alternate_deployment_dir}/client/modules/rampart-1.6.1-wso2v36.mar",
         require => File["${alternate_deployment_dir}/client"],
       }
     }

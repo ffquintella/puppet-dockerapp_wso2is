@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.3.30
+
+5.9.0 migration and deplyment.toml support increase
+
+**Bugfixes**
+- command execution detection
+
+
 ## Release 1.3.29
 
 5.9.0 migration and deplyment.toml support increase
