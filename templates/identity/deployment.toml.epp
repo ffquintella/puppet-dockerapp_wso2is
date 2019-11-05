@@ -4,13 +4,13 @@
 
 
 <% if $auth_password_recovery == true { -%>
-[[resource.access_control]]
+[resource.access_control]
 context = "(.*)/api/identity/recovery/(.*)"
 secured = true
 http_method = "all"
 permissions = ["/permission/admin/manage/identity/identitymgt"]
 <% } else { -%>
-[[resource.access_control]]
+[resource.access_control]
 context = "(.*)/api/identity/recovery/(.*)"
 secured = false
 http_method = "all"
