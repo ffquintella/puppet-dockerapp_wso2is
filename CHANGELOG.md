@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.3.35
+
+5.9.0 migration and deplyment.toml support increase
+
+**Bugfixes**
+- fix in identity deployment.toml
+
 
 ## Release 1.3.34
 

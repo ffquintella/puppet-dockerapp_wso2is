@@ -62,10 +62,12 @@ permissions=["/permission/admin/manage/identity/identitymgt"]
 <% } else { -%>
 ## RESOURCE ACCESS
 [[resource.access_control]]
-context="(.*)/api/identity/recovery/(.*)"
+context="/api/identity/recovery/(.*)"
 secure=false
 http_method="all"
-permissions=["/permission/admin/manage/identity/identitymgt"]
+
+[resource_access_control]
+default_access = "allow"
 ####
 <% } -%>
 
