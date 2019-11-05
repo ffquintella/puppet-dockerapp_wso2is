@@ -621,18 +621,12 @@ if( $version == '5.9.0') {
                   'mail_host'                   => $mail_host,
                   'mail_port'                   => $mail_port,
                   'mail_use_tls'                => $mail_use_tls,
+                  'auth_password_recovery'      => $auth_password_recovery,
                 }),
               notify  => Docker::Run[$service_name],
               require => File[$conf_configdir],
             }
 
-            file { "${conf_configdir}/identity/deployment.toml":
-              content => epp('dockerapp_wso2is/identity/deployment.toml.epp', {
-                'auth_password_recovery' => $auth_password_recovery,
-              }),
-              notify  => Docker::Run[$service_name],
-              require => File[$conf_configdir],
-            }
         }
       }else{
         if( $version == '5.8.0') {
@@ -740,25 +734,13 @@ if( $version == '5.9.0') {
                   'mail_host'                   => $mail_host,
                   'mail_port'                   => $mail_port,
                   'mail_use_tls'                => $mail_use_tls,
+                  'auth_password_recovery'      => $auth_password_recovery,
               })),
               authorization_token => $dbconn['ccm_api_key'],
               credentials         => [$ad_service_ccm_key, $dbconn['ccm_key']],
               configurations      => [],
               ccm_srv_record      => $ccm_srvc,
               destination_file    => "${conf_configdir}/deployment.toml",
-              environment         => $ccm_environment,
-              notify              => Docker::Run[$service_name],
-            }
-
-            ccm_cli::scheduled { "identity_deployment.toml":
-              template_content    => base64('encode', epp('dockerapp_wso2is/identity/deployment.toml.epp', {
-                'auth_password_recovery' => $auth_password_recovery,
-              })),
-              authorization_token => $dbconn['ccm_api_key'],
-              credentials         => [$ad_service_ccm_key],
-              configurations      => [],
-              ccm_srv_record      => $ccm_srvc,
-              destination_file    => "${conf_configdir}/identity/deployment.toml",
               environment         => $ccm_environment,
               notify              => Docker::Run[$service_name],
             }

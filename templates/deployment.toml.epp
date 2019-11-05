@@ -13,6 +13,7 @@
       String $ad_service_pwd,
       String $ad_user_search_base,
       String $ad_group_search_base,
+      Boolean $auth_password_recovery,
       Boolean $use_ccm = false,
       String $auth_endpoint = '/authenticationendpoint/login.do',
       String $auth_endpoint_retry = '/authenticationendpoint/retry.do',
@@ -38,7 +39,6 @@
       Boolean $mail_use_tls = true
 | -%>
 
-
 [server]
 hostname = "<%= $hostname -%>"
 node_ip = "<%= $ip_address -%>"
@@ -49,6 +49,25 @@ username = "<%= $adm_user -%>"
 password = "wso2Default4count!"
 admin_role = "<%= $adm_role -%>"
 create_admin_account = false
+
+
+<% if $auth_password_recovery == true { -%>
+## RESOURCE ACCESS
+[[resource.access_control]]
+context="(.*)/api/identity/recovery/(.*)"
+secure=true
+http_method="all"
+permissions=["/permission/admin/manage/identity/identitymgt"]
+####
+<% } else { -%>
+## RESOURCE ACCESS
+[[resource.access_control]]
+context="(.*)/api/identity/recovery/(.*)"
+secured=false
+http_method="all"
+permissions=["/permission/admin/manage/identity/identitymgt"]
+## RESOURCE ACCESS
+<% } -%>
 
 
 <% if $use_active_directory == true { -%>
