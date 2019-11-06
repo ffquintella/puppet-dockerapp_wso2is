@@ -21,6 +21,7 @@
       Boolean $enable_ha = false,
       Boolean $use_active_directory = false,
       Boolean $ad_use_ssl = true,
+      String $ad_user_entry_object_class = 'user',
       String $ad_user_name_search_filter = '(&amp;(objectClass=person)(sAMAccountName=?))',
       String $ad_user_name_list_filter = '(objectClass=person)',
       String $ad_group_name_search_filter = '(&amp;(objectClass=group)(cn=?))',
@@ -110,7 +111,7 @@ class = "org.wso2.carbon.user.core.ldap.ActiveDirectoryUserStoreManager"
 <% } -%>
 "AnonymousBind" = "false"
 "UserSearchBase" = "<%= $ad_user_search_base -%>"
-"UserEntryObjectClass" = "person"
+"UserEntryObjectClass" = "<%= $ad_user_entry_object_class -%>"
 "UserNameAttribute" = "sAMAccountName"
 "UserNameSearchFilter" = "<%= $ad_user_name_search_filter -%>"
 "UserNameListFilter" = "<%= $ad_user_name_list_filter -%>"

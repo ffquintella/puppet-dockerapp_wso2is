@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.3.38
+
+5.9.0 migration and deplyment.toml support increase
+
+**Bugfixes**
+- fix in user store propertie mapping
+
 ## Release 1.3.37
 
 5.9.0 migration and deplyment.toml support increase
