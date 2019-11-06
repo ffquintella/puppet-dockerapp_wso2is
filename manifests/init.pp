@@ -185,6 +185,9 @@
 # @param [String] mail_user 
 #   The email server authentication user
 #
+# @param [String] ad_user_entry_object_class 
+#   The user class in active directory
+#
 # @param [String] mail_password 
 #   The email server authentication password
 #

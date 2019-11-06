@@ -47,7 +47,7 @@ Data type: `Array`
 
 The port mapping in array format
 
-Default value: ['9443:9443','9763:9763', '4000:4000']
+Default value: ['9443:9443','9763:9763', '9999:9999', '4000:4000', '7612:7612', '7712:7712', '9612:9612', '9712:9712']
 
 ##### `dropins`
 
@@ -563,4 +563,12 @@ Data type: `String`
 
 
 Default value: ''
+
+##### `ad_user_entry_object_class`
+
+Data type: `String`
+
+
+
+Default value: 'user'
 
