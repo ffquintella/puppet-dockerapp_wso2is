@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.4.1
+
+Better support for deployment.toml
+
+**Features**
+- adding oauth.endpoints support in deployment.toml
+
 ## Release 1.3.38
 
 5.9.0 migration and deplyment.toml support increase

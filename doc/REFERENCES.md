@@ -500,6 +500,14 @@ The email server authentication user
 
 Default value: 'user'
 
+##### `ad_user_entry_object_class`
+
+Data type: `String`
+
+The user class in active directory
+
+Default value: 'user'
+
 ##### `mail_password`
 
 Data type: `String`
@@ -540,11 +548,57 @@ If the rest api to auth_password_recovery should be authenticated
 
 Default value: `true`
 
+##### `oauth_endpoint_oidc_consent_page`
+
+Data type: `String`
+
+(optional)
+The page to redirect the consent request
+
+Default value: ''
+
+##### `oauth_endpoint_oauth2_consent_page`
+
+Data type: `String`
+
+(optional)
+The page to redirect the oauth2 consent request
+
+Default value: ''
+
+##### `oauth_endpoint_oauth2_error_page`
+
+Data type: `String`
+
+(optional)
+The page to redirect in case of errors
+
+Default value: ''
+
+##### `oauth_endpoint_oidc_logout_consent_page`
+
+Data type: `String`
+
+(optional)
+The page to redirect to do the logout
+
+Default value: ''
+
+##### `oauth_endpoint_oidc_logout_page`
+
+Data type: `String`
+
+(optional)
+The page to redirect to do the logout
+
+Default value: ''
+
 ##### `ha_members`
 
 Data type: `Array`
 
-
+(optional)
+The list of ha members in the cluster
 
 Default value: ['127.0.0.1']
 
@@ -552,7 +606,8 @@ Default value: ['127.0.0.1']
 
 Data type: `String`
 
-
+(optional)
+The identity server FQDN
 
 Default value: $fqdn
 
@@ -560,15 +615,8 @@ Default value: $fqdn
 
 Data type: `String`
 
-
+(optional)
+The ccm key used for active directory service account
 
 Default value: ''
-
-##### `ad_user_entry_object_class`
-
-Data type: `String`
-
-
-
-Default value: 'user'
 

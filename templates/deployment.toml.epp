@@ -37,7 +37,12 @@
       String $mail_from = 'no@mail.com',
       String $mail_host = 'smtp.mail.com',
       String $mail_port = '587',
-      Boolean $mail_use_tls = true
+      Boolean $mail_use_tls = true,
+      String $oauth_endpoint_oidc_consent_page = '',
+      String $oauth_endpoint_oauth2_consent_page = '',
+      String $oauth_endpoint_oauth2_error_page = '',
+      String $oauth_endpoint_oidc_logout_consent_page = '',
+      String $oauth_endpoint_oidc_logout_page = ''
 | -%>
 
 [server]
@@ -72,6 +77,24 @@ default_access = "allow"
 ####
 <% } -%>
 
+## OAUTH ENDPOINTS
+[oauth.endpoints]
+<% if $oauth_endpoint_oidc_consent_page != '' { -%>
+oidc_consent_page = "<%= $oauth_endpoint_oidc_consent_page -%>"
+<% } -%>
+<% if $oauth_endpoint_oauth2_consent_page != '' { -%>
+oauth2_consent_page = "<%= $oauth_endpoint_oauth2_consent_page -%>"
+<% } -%>
+<% if $oauth_endpoint_oauth2_error_page != '' { -%>
+oauth2_error_page = "<%= $oauth_endpoint_oauth2_error_page -%>"
+<% } -%>
+<% if $oauth_endpoint_oidc_logout_consent_page != '' { -%>
+oidc_logout_consent_page = "<%= $oauth_endpoint_oidc_logout_consent_page -%>"
+<% } -%>
+<% if $oauth_endpoint_oidc_logout_page != '' { -%>
+oidc_logout_page = "<%= $oauth_endpoint_oidc_logout_page -%>"
+<% } -%>
+####
 
 <% if $use_active_directory == true { -%>
 ## EMAIL

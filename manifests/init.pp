@@ -203,6 +203,30 @@
 # @param [Boolean] auth_password_recovery
 #   If the rest api to auth_password_recovery should be authenticated
 #
+# @param [String] oauth_endpoint_oidc_consent_page (optional)
+#   The page to redirect the consent request
+#
+# @param [String] oauth_endpoint_oauth2_consent_page (optional)
+#   The page to redirect the oauth2 consent request
+#
+# @param [String] oauth_endpoint_oauth2_error_page (optional)
+#   The page to redirect in case of errors 
+#
+# @param [String] oauth_endpoint_oidc_logout_consent_page (optional)
+#   The page to redirect to do the logout
+#
+# @param [String] oauth_endpoint_oidc_logout_page (optional)
+#   The page to redirect to do the logout
+#
+# @param [Array] ha_members (optional)
+#   The list of ha members in the cluster
+#
+# @param [String] is_fqdn (optional)
+#   The identity server FQDN
+#
+# @param [String] ad_service_ccm_key (optional)
+#   The ccm key used for active directory service account
+#
 class dockerapp_wso2is (
   String $service_name = 'wso2is',
   String $version = '5.8.0',
@@ -272,6 +296,11 @@ class dockerapp_wso2is (
   String $mail_port = '587',
   Boolean $mail_use_tls = true,
   Boolean $auth_password_recovery = true,
+  String $oauth_endpoint_oidc_consent_page = '',
+  String $oauth_endpoint_oauth2_consent_page = '',
+  String $oauth_endpoint_oauth2_error_page = '',
+  String $oauth_endpoint_oidc_logout_consent_page = '',
+  String $oauth_endpoint_oidc_logout_page = ''
 ){
 
   include 'dockerapp'
@@ -588,50 +617,56 @@ if( $version == '5.9.0') {
 
             file {"${conf_configdir}/deployment.toml":
               content => epp('dockerapp_wso2is/deployment.toml.epp', {
-                  'auth_endpoint'               => $external_auth_endpoint,
-                  'auth_endpoint_retry'         => $external_auth_endpoint_retry,
-                  'auth_endpoint_claims'        => $external_auth_endpoint_claims,
-                  'enable_ha'                   => $enable_ha,
-                  'cluster_name'                => $ha_cluster_name,
-                  'ha_members'                  => $ha_members,
-                  'ip_address'                  => $::networking['interfaces']['eth0']['ip'],
-                  'hostname'                    => $is_fqdn,
-                  'db_conn'                     => $dbconn,
-                  'use_ccm'                     => $use_ccm,
-                  'adm_user'                    => $adm_user,
-                  'adm_pwd'                     => $adm_pwd,
-                  'adm_role'                    => $adm_role,
-                  'use_active_directory'        => $use_active_directory,
-                  'ad_server'                   => $ad_server,
-                  'ad_port'                     => $ad_port,
-                  'ad_use_ssl'                  => $ad_use_ssl,
-                  'ad_service_user'             => $ad_service_user,
-                  'ad_service_pwd'              => $ad_service_pwd,
-                  'ad_user_search_base'         => $ad_user_search_base,
-                  'ad_group_search_base'        => $ad_group_search_base,
-                  'ad_user_name_search_filter'  => $ad_user_name_search_filter,
-                  'ad_user_name_list_filter'    => $ad_user_name_list_filter,
-                  'ad_user_entry_object_class'  => $ad_user_entry_object_class,
-                  'ad_group_name_search_filter' => $ad_group_name_search_filter,
-                  'ad_group_name_list_filter'   => $ad_group_name_list_filter,
-                  'pwd_java_regex'              => $pwd_java_regex,
-                  'pwd_java_script_regex'       => $pwd_java_script_regex,
-                  'pwd_violation_msg'           => $pwd_violation_msg,
-                  'enable_scim'                 => $enable_scim,
-                  'send_mail'                   => $send_mail,
-                  'mail_authenticate'           => $mail_authenticate,
-                  'mail_user'                   => $mail_user,
-                  'mail_password'               => $mail_password,
-                  'mail_from'                   => $mail_from,
-                  'mail_host'                   => $mail_host,
-                  'mail_port'                   => $mail_port,
-                  'mail_use_tls'                => $mail_use_tls,
-                  'auth_password_recovery'      => $auth_password_recovery,
+                  'auth_endpoint'                           => $external_auth_endpoint,
+                  'auth_endpoint_retry'                     => $external_auth_endpoint_retry,
+                  'auth_endpoint_claims'                    => $external_auth_endpoint_claims,
+                  'enable_ha'                               => $enable_ha,
+                  'cluster_name'                            => $ha_cluster_name,
+                  'ha_members'                              => $ha_members,
+                  'ip_address'                              => $::networking['interfaces']['eth0']['ip'],
+                  'hostname'                                => $is_fqdn,
+                  'db_conn'                                 => $dbconn,
+                  'use_ccm'                                 => $use_ccm,
+                  'adm_user'                                => $adm_user,
+                  'adm_pwd'                                 => $adm_pwd,
+                  'adm_role'                                => $adm_role,
+                  'use_active_directory'                    => $use_active_directory,
+                  'ad_server'                               => $ad_server,
+                  'ad_port'                                 => $ad_port,
+                  'ad_use_ssl'                              => $ad_use_ssl,
+                  'ad_service_user'                         => $ad_service_user,
+                  'ad_service_pwd'                          => $ad_service_pwd,
+                  'ad_user_search_base'                     => $ad_user_search_base,
+                  'ad_group_search_base'                    => $ad_group_search_base,
+                  'ad_user_name_search_filter'              => $ad_user_name_search_filter,
+                  'ad_user_name_list_filter'                => $ad_user_name_list_filter,
+                  'ad_user_entry_object_class'              => $ad_user_entry_object_class,
+                  'ad_group_name_search_filter'             => $ad_group_name_search_filter,
+                  'ad_group_name_list_filter'               => $ad_group_name_list_filter,
+                  'pwd_java_regex'                          => $pwd_java_regex,
+                  'pwd_java_script_regex'                   => $pwd_java_script_regex,
+                  'pwd_violation_msg'                       => $pwd_violation_msg,
+                  'enable_scim'                             => $enable_scim,
+                  'send_mail'                               => $send_mail,
+                  'mail_authenticate'                       => $mail_authenticate,
+                  'mail_user'                               => $mail_user,
+                  'mail_password'                           => $mail_password,
+                  'mail_from'                               => $mail_from,
+                  'mail_host'                               => $mail_host,
+                  'mail_port'                               => $mail_port,
+                  'mail_use_tls'                            => $mail_use_tls,
+                  'auth_password_recovery'                  => $auth_password_recovery,
+                  'oauth_endpoint_oidc_consent_page'        => $oauth_endpoint_oidc_consent_page,
+                  'oauth_endpoint_oauth2_consent_page'      => $oauth_endpoint_oauth2_consent_page,
+                  'oauth_endpoint_oauth2_error_page'        => $oauth_endpoint_oauth2_error_page,
+                  'oauth_endpoint_oidc_logout_consent_page' => $oauth_endpoint_oidc_logout_consent_page,
+                  'oauth_endpoint_oidc_logout_page'         => $oauth_endpoint_oidc_logout_page,
+
+
                 }),
               notify  => Docker::Run[$service_name],
               require => File[$conf_configdir],
             }
-
         }
       }else{
         if( $version == '5.8.0') {
@@ -702,45 +737,50 @@ if( $version == '5.9.0') {
         } else {
             ccm_cli::scheduled { "deployment.toml":
               template_content    => base64('encode', epp('dockerapp_wso2is/deployment.toml.epp', {
-                  'auth_endpoint'               => $external_auth_endpoint,
-                  'auth_endpoint_retry'         => $external_auth_endpoint_retry,
-                  'auth_endpoint_claims'        => $external_auth_endpoint_claims,
-                  'enable_ha'                   => $enable_ha,
-                  'cluster_name'                => $ha_cluster_name,
-                  'ha_members'                  => $ha_members,
-                  'ip_address'                  => $::networking['interfaces']['eth0']['ip'],
-                  'hostname'                    => $is_fqdn,
-                  'db_conn'                     => $dbconn,
-                  'use_ccm'                     => $use_ccm,
-                  'adm_user'                    => $adm_user,
-                  'adm_pwd'                     => $adm_pwd,
-                  'adm_role'                    => $adm_role,
-                  'use_active_directory'        => $use_active_directory,
-                  'ad_server'                   => $ad_server,
-                  'ad_port'                     => $ad_port,
-                  'ad_use_ssl'                  => $ad_use_ssl,
-                  'ad_service_user'             => $ad_service_user,
-                  'ad_service_pwd'              => $ad_service_pwd,
-                  'ad_user_search_base'         => $ad_user_search_base,
-                  'ad_group_search_base'        => $ad_group_search_base,
-                  'ad_user_name_search_filter'  => $ad_user_name_search_filter,
-                  'ad_user_name_list_filter'    => $ad_user_name_list_filter,
-                  'ad_user_entry_object_class'  => $ad_user_entry_object_class,
-                  'ad_group_name_search_filter' => $ad_group_name_search_filter,
-                  'ad_group_name_list_filter'   => $ad_group_name_list_filter,
-                  'pwd_java_regex'              => $pwd_java_regex,
-                  'pwd_java_script_regex'       => $pwd_java_script_regex,
-                  'pwd_violation_msg'           => $pwd_violation_msg,
-                  'enable_scim'                 => $enable_scim,
-                  'send_mail'                   => $send_mail,
-                  'mail_authenticate'           => $mail_authenticate,
-                  'mail_user'                   => $mail_user,
-                  'mail_password'               => $mail_password,
-                  'mail_from'                   => $mail_from,
-                  'mail_host'                   => $mail_host,
-                  'mail_port'                   => $mail_port,
-                  'mail_use_tls'                => $mail_use_tls,
-                  'auth_password_recovery'      => $auth_password_recovery,
+                  'auth_endpoint'                           => $external_auth_endpoint,
+                  'auth_endpoint_retry'                     => $external_auth_endpoint_retry,
+                  'auth_endpoint_claims'                    => $external_auth_endpoint_claims,
+                  'enable_ha'                               => $enable_ha,
+                  'cluster_name'                            => $ha_cluster_name,
+                  'ha_members'                              => $ha_members,
+                  'ip_address'                              => $::networking['interfaces']['eth0']['ip'],
+                  'hostname'                                => $is_fqdn,
+                  'db_conn'                                 => $dbconn,
+                  'use_ccm'                                 => $use_ccm,
+                  'adm_user'                                => $adm_user,
+                  'adm_pwd'                                 => $adm_pwd,
+                  'adm_role'                                => $adm_role,
+                  'use_active_directory'                    => $use_active_directory,
+                  'ad_server'                               => $ad_server,
+                  'ad_port'                                 => $ad_port,
+                  'ad_use_ssl'                              => $ad_use_ssl,
+                  'ad_service_user'                         => $ad_service_user,
+                  'ad_service_pwd'                          => $ad_service_pwd,
+                  'ad_user_search_base'                     => $ad_user_search_base,
+                  'ad_group_search_base'                    => $ad_group_search_base,
+                  'ad_user_name_search_filter'              => $ad_user_name_search_filter,
+                  'ad_user_name_list_filter'                => $ad_user_name_list_filter,
+                  'ad_user_entry_object_class'              => $ad_user_entry_object_class,
+                  'ad_group_name_search_filter'             => $ad_group_name_search_filter,
+                  'ad_group_name_list_filter'               => $ad_group_name_list_filter,
+                  'pwd_java_regex'                          => $pwd_java_regex,
+                  'pwd_java_script_regex'                   => $pwd_java_script_regex,
+                  'pwd_violation_msg'                       => $pwd_violation_msg,
+                  'enable_scim'                             => $enable_scim,
+                  'send_mail'                               => $send_mail,
+                  'mail_authenticate'                       => $mail_authenticate,
+                  'mail_user'                               => $mail_user,
+                  'mail_password'                           => $mail_password,
+                  'mail_from'                               => $mail_from,
+                  'mail_host'                               => $mail_host,
+                  'mail_port'                               => $mail_port,
+                  'mail_use_tls'                            => $mail_use_tls,
+                  'auth_password_recovery'                  => $auth_password_recovery,
+                  'oauth_endpoint_oidc_consent_page'        => $oauth_endpoint_oidc_consent_page,
+                  'oauth_endpoint_oauth2_consent_page'      => $oauth_endpoint_oauth2_consent_page,
+                  'oauth_endpoint_oauth2_error_page'        => $oauth_endpoint_oauth2_error_page,
+                  'oauth_endpoint_oidc_logout_consent_page' => $oauth_endpoint_oidc_logout_consent_page,
+                  'oauth_endpoint_oidc_logout_page'         => $oauth_endpoint_oidc_logout_page,
               })),
               authorization_token => $dbconn['ccm_api_key'],
               credentials         => [$ad_service_ccm_key, $dbconn['ccm_key']],
