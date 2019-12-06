@@ -412,6 +412,30 @@ The wso2 identity log level default = INFO
 
 Default value: 'INFO'
 
+##### `scim_log_level`
+
+Data type: `String`
+
+The wso2 SCIM log level default = INFO
+
+Default value: 'INFO'
+
+##### `oauth_log_level`
+
+Data type: `String`
+
+The wso2 OAUTH log level default = INFO
+
+Default value: 'INFO'
+
+##### `identity_mgmt_log_level`
+
+Data type: `String`
+
+The wso2 identity management log level default = INFO
+
+Default value: 'INFO'
+
 ##### `pwd_java_regex`
 
 Data type: `String`
