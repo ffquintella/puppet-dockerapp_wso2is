@@ -152,6 +152,15 @@
 # @param [String] identity_log_level 
 #   The wso2 identity log level default = INFO
 #
+# @param [String] scim_log_level 
+#   The wso2 SCIM log level default = INFO
+#
+# @param [String] oauth_log_level 
+#   The wso2 OAUTH log level default = INFO
+#
+# @param [String] identity_mgmt_log_level 
+#   The wso2 identity management log level default = INFO
+#
 # @param [String] pwd_java_regex 
 #   The java regex to validate passwords
 #
@@ -280,6 +289,9 @@ class dockerapp_wso2is (
   String $master_log_level = 'INFO',
   String $authentication_log_level = 'INFO',
   String $identity_log_level = 'INFO',
+  String $scim_log_level = 'INFO',
+  String $oauth_log_level = 'INFO',
+  String $identity_mgmt_log_level = 'INFO',
   String $pwd_java_regex = '[a-zA-Z0-9._\-|//]{3,30}$',
   String $pwd_java_script_regex = '^[\S]{5,30}$',
   String $pwd_violation_msg = 'Password length should be within 5 to 30 characters',
@@ -881,6 +893,9 @@ if( $version == '5.9.0') {
             'master_log_level'         => $master_log_level,
             'authentication_log_level' => $authentication_log_level,
             'identity_log_level'       => $identity_log_level,
+            'scim_log_level'           => $scim_log_level,
+            'oauth_log_level'          => $oauth_log_level,
+            'identity_mgmt_log_level'  => $identity_mgmt_log_level,
             }),
           notify  => Docker::Run[$service_name],
           require => File[$conf_configdir],

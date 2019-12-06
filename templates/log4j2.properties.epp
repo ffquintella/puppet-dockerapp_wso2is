@@ -2,6 +2,9 @@
       String $master_log_level = 'INFO',
       String $authentication_log_level = 'INFO',
       String $identity_log_level = 'INFO',
+      String $scim_log_level = 'INFO',
+      String $oauth_log_level = 'INFO',
+      String $identity_mgmt_log_level = 'INFO',
 | -%>
 
 
@@ -349,14 +352,14 @@ logger.org-wso2-carbon-identity-sso-saml.level=<%= $identity_log_level %>
 #logger.org-wso2-carbon-identity-application-authentication-framework.name=org.wso2.carbon.identity.application.authentication.framework
 #logger.org-wso2-carbon-identity-application-authentication-framework.level=DEBUG
 
-#logger.org-wso2-carbon-identity-mgt.name=org.wso2.carbon.identity.mgt
-#logger.org-wso2-carbon-identity-mgt.level=DEBUG
+logger.org-wso2-carbon-identity-mgt.name=org.wso2.carbon.identity.mgt
+logger.org-wso2-carbon-identity-mgt.level=<%= $identity_mgmt_log_level %>
 
-#logger.org-wso2-carbon-identity-oauth2.name=org.wso2.carbon.identity.oauth2
-#logger.org-wso2-carbon-identity-oauth2.level=DEBUG
+logger.org-wso2-carbon-identity-oauth2.name=org.wso2.carbon.identity.oauth2
+logger.org-wso2-carbon-identity-oauth2.level=<%= $oauth_log_level %>
 
-#logger.org-wso2-carbon-identity-scim.name=org.wso2.carbon.identity.scim
-#logger.org-wso2-carbon-identity-scim.level=DEBUG
+logger.org-wso2-carbon-identity-scim.name=org.wso2.carbon.identity.scim
+logger.org-wso2-carbon-identity-scim.level=<%= $scim_log_level %>
 
 #logger.org-wso2-carbon-identity-mgt.name=org.wso2.carbon.identity.mgt
 #logger.org-wso2-carbon-identity-mgt.level=DEBUG
