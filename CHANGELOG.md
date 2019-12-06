@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.5.2
+
+Mounting host /etc/hosts in container
+
+
+## Release 1.5.1
+
+Some new parameters
+
+**Features**
+- new logs parameters
+
 ## Release 1.4.1
 
 Better support for deployment.toml

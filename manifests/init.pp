@@ -1003,6 +1003,7 @@ if( $version == '5.9.0') {
       "${conf_logdir}:/home/wso2carbon/wso2is-${version}/repository/logs",
       "${conf_libdir}/dropins:/home/wso2carbon/wso2is-${version}/repository/components/dropins",
       "${conf_libdir}/lib:/home/wso2carbon/wso2is-${version}/repository/components/lib",
+      '/etc/hosts:/etc/hosts:ro',
     ]
   }else{
     file{ "${conf_datadir}/deployment":
@@ -1073,6 +1074,7 @@ if( $version == '5.9.0') {
       "${conf_logdir}:/home/wso2carbon/wso2is-${version}/repository/logs",
       "${conf_libdir}/dropins:/home/wso2carbon/wso2is-${version}/repository/components/dropins",
       "${conf_libdir}/lib:/home/wso2carbon/wso2is-${version}/repository/components/lib",
+      '/etc/hosts:/etc/hosts:ro',
     ]
   }
 
