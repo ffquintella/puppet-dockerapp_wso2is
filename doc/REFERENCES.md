@@ -556,6 +556,22 @@ The email server host
 
 Default value: 'smtp.mail.com'
 
+##### `pwd_min_lenght`
+
+Data type: `Integer`
+
+The minimum lenght of the password (used in scim)
+
+Default value: 5
+
+##### `pwd_max_lenght`
+
+Data type: `Integer`
+
+The maximum lenght of the password (used in scim)
+
+Default value: 30
+
 ##### `mail_port`
 
 Data type: `String`
