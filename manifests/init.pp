@@ -206,6 +206,12 @@
 # @param [String] mail_host 
 #   The email server host
 #
+# @param [Integer] pwd_min_lenght 
+#   The minimum lenght of the password (used in scim)
+#
+# @param [Integer] pwd_max_lenght 
+#   The maximum lenght of the password (used in scim)
+#
 # @param [String] mail_port 
 #   The email service port
 #
@@ -295,6 +301,8 @@ class dockerapp_wso2is (
   String $pwd_java_regex = '[a-zA-Z0-9._\-|//]{3,30}$',
   String $pwd_java_script_regex = '^[\S]{5,30}$',
   String $pwd_violation_msg = 'Password length should be within 5 to 30 characters',
+  Integer $pwd_min_lenght = 5,
+  Integer $pwd_max_lenght = 30,
   Array $extra_trust_certs = [],
   Array $cors_domains = [],
   Boolean $enable_scim = false,
@@ -407,7 +415,7 @@ if( $version == '5.9.0') {
     creates => "${conf_libdir}/libs/README.txt",
     require => File["${conf_libdir}/libs"],
   }
-  
+
   exec { "${service_name}-copy-dropins":
     command => "/usr/bin/docker run --rm --name=${service_name}_cp_dropins -v ${conf_libdir}/dropins:/conf_dest --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/components/dropins/* /conf_dest\"",
     creates => "${conf_libdir}/dropins/kubernetes-membership-scheme-1.0.5.jar",
@@ -942,6 +950,18 @@ if( $version == '5.9.0') {
         require => File[$conf_configdir],
       }
     }
+  }
+
+  file {"${conf_configdir}/identity/identity-mgt.properties":
+    content => epp('dockerapp_wso2is/identity/identity-mgt.properties.epp', {
+      'temp_password'     => true,
+      'pwd_min_lenght'    => $pwd_min_lenght,
+      'pwd_max_lenght'    => $pwd_max_lenght,
+      'pwd_java_regex'    => $pwd_java_regex,
+      'pwd_violation_msg' => $pwd_violation_msg,
+      }),
+    notify  => Docker::Run[$service_name],
+    require => File[$conf_configdir],
   }
 
   if ( $use_alternate_dirs == true ) {

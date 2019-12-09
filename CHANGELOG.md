@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.6.1
+
+identity-mgt.properties template
+
+**Features**
+- adding the ability to manage identity-mgt.properties
+
 ## Release 1.5.3
 
 Fixing some event listeners that where disabled by default
