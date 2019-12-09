@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.6.2
+
+Small bugfix
+
+**Bugfixes**
+- fix temp_password template
+
 ## Release 1.6.1
 
 identity-mgt.properties template
