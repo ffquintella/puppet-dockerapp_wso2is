@@ -307,6 +307,15 @@ members = [
 
 ####
 
+[event.default_listener.identity_mgt]
+priority = "50"
+enable = "true"
+
+<% if $enable_scim == true { -%>
+[event.default_listener.scim2]
+priority = "93"
+enable = "true"
+<% } -%>
 
 [event.default_listener.application_authentication]
 priority = "11"

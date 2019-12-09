@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.5.3
+
+Fixing some event listeners that where disabled by default
+
+**Bugfixes**
+- fix in event listeners needed
+
 ## Release 1.5.2
 
 Mounting host /etc/hosts in container
