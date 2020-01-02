@@ -113,6 +113,15 @@
 # @param [String] ad_server 
 #   The active directory server (PDC is prefered)
 #
+# @param [Boolean] ad_use_secundary 
+#   If there is a secundary active directory server (for fail over)
+#
+# @param [String] ad_secundary_server 
+#   The secundary active directory server
+#
+# @param [String] ad_secundary_port 
+#   The secundary active directory port (636)
+#
 # @param [String] ad_port 
 #   The active directory port (636)
 #
@@ -281,6 +290,9 @@ class dockerapp_wso2is (
   Boolean $use_active_directory = false,
   String $ad_server = '',
   String $ad_port = '636',
+  Boolean $ad_use_secundary = false,
+  String $ad_secundary_server = '',
+  String $ad_secundary_port = '636',
   Boolean $ad_use_ssl = true,
   String $ad_service_user = '',
   String $ad_service_pwd = '',
@@ -653,6 +665,9 @@ if( $version == '5.9.0') {
                   'use_active_directory'                    => $use_active_directory,
                   'ad_server'                               => $ad_server,
                   'ad_port'                                 => $ad_port,
+                  'ad_use_secundary'                        => $ad_use_secundary,
+                  'ad_secundary_server'                     => $ad_secundary_server,
+                  'ad_secundary_port'                       => $ad_secundary_port,
                   'ad_use_ssl'                              => $ad_use_ssl,
                   'ad_service_user'                         => $ad_service_user,
                   'ad_service_pwd'                          => $ad_service_pwd,
@@ -773,6 +788,9 @@ if( $version == '5.9.0') {
                   'use_active_directory'                    => $use_active_directory,
                   'ad_server'                               => $ad_server,
                   'ad_port'                                 => $ad_port,
+                  'ad_use_secundary'                        => $ad_use_secundary,
+                  'ad_secundary_server'                     => $ad_secundary_server,
+                  'ad_secundary_port'                       => $ad_secundary_port,
                   'ad_use_ssl'                              => $ad_use_ssl,
                   'ad_service_user'                         => $ad_service_user,
                   'ad_service_pwd'                          => $ad_service_pwd,

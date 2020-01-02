@@ -308,6 +308,30 @@ The active directory server (PDC is prefered)
 
 Default value: ''
 
+##### `ad_use_secundary`
+
+Data type: `Boolean`
+
+If there is a secundary active directory server (for fail over)
+
+Default value: `false`
+
+##### `ad_secundary_server`
+
+Data type: `String`
+
+The secundary active directory server
+
+Default value: ''
+
+##### `ad_secundary_port`
+
+Data type: `String`
+
+The secundary active directory port (636)
+
+Default value: '636'
+
 ##### `ad_port`
 
 Data type: `String`

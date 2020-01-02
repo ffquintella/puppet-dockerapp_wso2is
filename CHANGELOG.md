@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.7.1
+
+Support for active directory secundary server
+
+**Features**
+- adding the use_ad_secundary_server 
+
+
 ## Release 1.6.2
 
 Small bugfix
