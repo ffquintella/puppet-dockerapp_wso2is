@@ -131,9 +131,17 @@ class = "org.wso2.carbon.user.core.ldap.ActiveDirectoryUserStoreManager"
 "ConnectionPassword"= "<%%= credential[0] %%>"
 <% } -%>
 <% if $ad_use_ssl == true { -%>
-"ConnectionURL" = "ldaps://<%= $ad_server -%>:<%= $ad_port -%>"
+<% if $ad_use_secundary == true { -%>
+"ConnectionURL" = "ldaps://<%= $ad_server -%>:<%= $ad_port -%> ldaps://<%= $ad_secundary_server -%>:<%= $ad_secundary_port -%>"
 <% } else { -%>
-"ConnectionURL" = "ldap://<%= $ad_server -%>:<%= $ad_port -%>"          
+"ConnectionURL" = "ldaps://<%= $ad_server -%>:<%= $ad_port -%>"
+<% } -%>
+<% } else { -%>
+<% if $ad_use_secundary == true { -%>
+"ConnectionURL" = "ldap://<%= $ad_server -%>:<%= $ad_port -%> ldaps://<%= $ad_secundary_server -%>:<%= $ad_secundary_port -%>"
+<% } else { -%>
+"ConnectionURL" = "ldap://<%= $ad_server -%>:<%= $ad_port -%>"
+<% } -%>        
 <% } -%>
 "AnonymousBind" = "false"
 "UserSearchBase" = "<%= $ad_user_search_base -%>"
