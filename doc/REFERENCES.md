@@ -684,3 +684,11 @@ The ccm key used for active directory service account
 
 Default value: ''
 
+##### `enable_soap`
+
+Data type: `Boolean`
+
+If the soap services should be enabled
+
+Default value: `true`
+

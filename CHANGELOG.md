@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.8.1
+
+Support for enablind soap webservices
+
+**Features**
+- adding the enable_soap variable
+
 ## Release 1.7.1
 
 Support for active directory secundary server

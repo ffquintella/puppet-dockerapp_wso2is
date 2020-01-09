@@ -45,7 +45,8 @@
       String $oauth_endpoint_oauth2_consent_page = '',
       String $oauth_endpoint_oauth2_error_page = '',
       String $oauth_endpoint_oidc_logout_consent_page = '',
-      String $oauth_endpoint_oidc_logout_page = ''
+      String $oauth_endpoint_oidc_logout_page = '',
+      Boolean $enable_soap = true,
 | -%>
 
 [server]
@@ -315,6 +316,17 @@ members = [
 ]
 <% } -%>
 
+
+####
+
+## SOAP
+
+
+<% if $enable_soap == true { -%>
+[admin_service.wsdl]
+enable = true
+
+<% } -%>
 
 ####
 

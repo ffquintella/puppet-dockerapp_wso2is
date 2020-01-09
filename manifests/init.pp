@@ -251,6 +251,9 @@
 # @param [String] ad_service_ccm_key (optional)
 #   The ccm key used for active directory service account
 #
+# @param [Boolean] enable_soap
+#   If the soap services should be enabled
+#
 class dockerapp_wso2is (
   String $service_name = 'wso2is',
   String $version = '5.8.0',
@@ -332,7 +335,8 @@ class dockerapp_wso2is (
   String $oauth_endpoint_oauth2_consent_page = '',
   String $oauth_endpoint_oauth2_error_page = '',
   String $oauth_endpoint_oidc_logout_consent_page = '',
-  String $oauth_endpoint_oidc_logout_page = ''
+  String $oauth_endpoint_oidc_logout_page = '',
+  Boolean $enable_soap = true,
 ){
 
   include 'dockerapp'
@@ -696,7 +700,7 @@ if( $version == '5.9.0') {
                   'oauth_endpoint_oauth2_error_page'        => $oauth_endpoint_oauth2_error_page,
                   'oauth_endpoint_oidc_logout_consent_page' => $oauth_endpoint_oidc_logout_consent_page,
                   'oauth_endpoint_oidc_logout_page'         => $oauth_endpoint_oidc_logout_page,
-
+                  'enable_soap'                             => $enable_soap,
 
                 }),
               notify  => Docker::Run[$service_name],
@@ -819,6 +823,7 @@ if( $version == '5.9.0') {
                   'oauth_endpoint_oauth2_error_page'        => $oauth_endpoint_oauth2_error_page,
                   'oauth_endpoint_oidc_logout_consent_page' => $oauth_endpoint_oidc_logout_consent_page,
                   'oauth_endpoint_oidc_logout_page'         => $oauth_endpoint_oidc_logout_page,
+                  'enable_soap'                             => $enable_soap,
               })),
               authorization_token => $dbconn['ccm_api_key'],
               credentials         => [$ad_service_ccm_key, $dbconn['ccm_key']],
