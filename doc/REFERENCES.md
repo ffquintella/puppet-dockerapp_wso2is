@@ -196,6 +196,14 @@ The ccm key for the db user password
 
 Default value: ''
 
+##### `create_super_admin`
+
+Data type: `Boolean`
+
+If we are goind to create an admin account
+
+Default value: `false`
+
 ##### `adm_user`
 
 Data type: `String`
