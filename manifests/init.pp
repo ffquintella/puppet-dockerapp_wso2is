@@ -71,6 +71,9 @@
 # @param [String] db_db_user_pwd_ccm_key 
 #   The ccm key for the db user password
 #
+# @param [String] create_super_admin
+#   If we are goind to create an admin account
+#
 # @param [String] adm_user 
 #   The initial system admin account  
 #
@@ -276,6 +279,7 @@ class dockerapp_wso2is (
   String $db_db_user_login = '',
   String $db_db_user_password = '',
   String $db_db_user_pwd_ccm_key = '',
+  Boolean $create_super_admin = false,
   String $adm_user = 'admin',
   String $adm_pwd = 'secret',
   String $adm_role = 'wso2isadmin',
@@ -650,7 +654,6 @@ if( $version == '5.9.0') {
             require => File[$conf_configdir],
           }
         } else {
-
             file {"${conf_configdir}/deployment.toml":
               content => epp('dockerapp_wso2is/deployment.toml.epp', {
                   'auth_endpoint'                           => $external_auth_endpoint,
@@ -663,6 +666,7 @@ if( $version == '5.9.0') {
                   'hostname'                                => $is_fqdn,
                   'db_conn'                                 => $dbconn,
                   'use_ccm'                                 => $use_ccm,
+                  'create_super_admin'                      => $create_super_admin,
                   'adm_user'                                => $adm_user,
                   'adm_pwd'                                 => $adm_pwd,
                   'adm_role'                                => $adm_role,
@@ -786,6 +790,7 @@ if( $version == '5.9.0') {
                   'hostname'                                => $is_fqdn,
                   'db_conn'                                 => $dbconn,
                   'use_ccm'                                 => $use_ccm,
+                  'create_super_admin'                      => $create_super_admin,
                   'adm_user'                                => $adm_user,
                   'adm_pwd'                                 => $adm_pwd,
                   'adm_role'                                => $adm_role,

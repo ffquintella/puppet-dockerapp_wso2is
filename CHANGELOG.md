@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.9.1
+
+Support for superadmin creation 
+
+**Features**
+- adding the create_super_admin variable
+
 ## Release 1.8.1
 
 Support for enablind soap webservices
