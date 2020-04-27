@@ -3,7 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 
-## Release 1.9.1
+## Release 1.10.2
+
+**Bugfixes**
+- fix in logic operand
+
+
+## Release 1.10.1
 
 Support for new version of wso2is
 
