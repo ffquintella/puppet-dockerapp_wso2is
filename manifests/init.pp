@@ -422,7 +422,7 @@ class dockerapp_wso2is (
     require => File["${conf_datadir}/db-scripts"],
   }
 
-if( $version == '5.9.0' || $version == '5.10.0') {
+if( $version == '5.9.0' or $version == '5.10.0') {
 
   exec { "${service_name}-copy-configs":
     command => "/usr/bin/docker run --rm --name=${service_name}_tmp -v ${conf_configdir}:/conf_dest --entrypoint=\"\" -t ${image} /bin/bash -c \"cp -a /home/wso2carbon/wso2is-${version}/repository/conf/* /conf_dest\"",
