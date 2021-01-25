@@ -254,6 +254,9 @@
 # @param [String] ad_service_ccm_key (optional)
 #   The ccm key used for active directory service account
 #
+# @param [String] docker_net (optional)
+#   Specifies the docker network to use
+#
 # @param [Boolean] enable_soap
 #   If the soap services should be enabled
 #
@@ -340,6 +343,7 @@ class dockerapp_wso2is (
   String $oauth_endpoint_oauth2_error_page = '',
   String $oauth_endpoint_oidc_logout_consent_page = '',
   String $oauth_endpoint_oidc_logout_page = '',
+  String $docker_net = '',
   Boolean $enable_soap = true,
 ){
 
@@ -1138,6 +1142,7 @@ if( $version == '5.9.0' or $version == '5.10.0') {
     ports        => $ports,
     volumes      => $volumes,
     environments => $envs,
+    net          => $docker_net,
     dir_group    => $dir_group,
     dir_owner    => $dir_owner,
   }
